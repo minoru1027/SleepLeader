@@ -10,6 +10,7 @@ import android.media.SoundPool
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.support.v7.app.AppCompatViewInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +26,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AlarmLIst : AppCompatActivity() {
+class AlarmListActivity : AppCompatActivity() {
 
     private lateinit var realm : Realm
     private var timerList : HashMap<Long,String> = hashMapOf()
@@ -40,7 +41,7 @@ class AlarmLIst : AppCompatActivity() {
 
         realm = Realm.getDefaultInstance()
 
-        realm.executeTransaction{
+        /*realm.executeTransaction{
             var maxId = realm.where<AlarmTable>().max("alarmId")
             var nextId = (maxId?.toLong() ?: 0L) +1
             var alarm = realm.createObject<AlarmTable>(nextId)
@@ -48,7 +49,7 @@ class AlarmLIst : AppCompatActivity() {
             alarm.musicPath="www"
             alarm.musicFlag="ON"
             alarm.snoozeFlag="ON"
-        }
+        }*/
         val alarmList = realm.where<AlarmTable>().findAll()
         listView.adapter = alarmListAdapter(alarmList)
     }
@@ -64,16 +65,23 @@ class AlarmLIst : AppCompatActivity() {
         }
 
         alarmStopButtom.setOnClickListener{
+
             val calendar = Calendar.getInstance()
+            val calendarNow = Calendar.getInstance()
+            val timeNow= getNow()
+            calendarNow.time = timeNow
             for((key,value) in timerList){
                 val timeSet = timerList.get(key)?.toDate()
-                println(timeSet)
                 calendar.time = timeSet
+                if(calendar.timeInMillis < calendarNow.timeInMillis){
+                    calendar.add(Calendar.DAY_OF_MONTH+1,1)
+                }
+                var timeMill = calendar.timeInMillis - calendarNow.timeInMillis
+                calendar.timeInMillis = timeMill
+                println(calendar.timeInMillis)
                 setAlarmManager(calendar)
                 time.add(calendar)
             }
-
-
             startActivity<AlarmStopActivity>("timerList" to timerList)
         }
     }
@@ -126,10 +134,17 @@ class AlarmLIst : AppCompatActivity() {
          }
          return timer
      }
+     private fun getNow() : Date?{
+         val calendarNow = Calendar.getInstance()
+         val hour  = calendarNow.get(Calendar.HOUR_OF_DAY).toString()
+         var minute = calendarNow.get(Calendar.MINUTE).toString()
+         val timeNow = hour+":"+minute
+         val timerNow = timeNow.toDate()
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
-    }
+         return timerNow
+     }
+     override fun onDestroy() {
+         super.onDestroy()
+         realm.close()
+     }
 }
