@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="f1.sleepLeader">
+        package="f1.sleepLeader">
 
     <application
             android:name=".SleepLeaderApplication"
@@ -10,17 +10,19 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".AlarmStopActivity">
-        </activity>
-        <activity android:name=".AlarmListActivity">
+        <activity android:name=".AlarmStopActivity"></activity>
+        <activity android:name=".AlarmSetActivity" />
+        <activity android:name=".AlarmActivity">
             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AlarmActivity">
-            <action android:name="android.intent.action.MAIN"/>
 
-            <category android:name="android.intent.category.LAUNCHER"/>
+        <receiver android:name=".AlarmReceiver" />
+
+        <activity android:name=".AlarmListActivity">
         </activity>
         <receiver android:name=".AlarmBroadcastReceiver"></receiver>
     </application>
