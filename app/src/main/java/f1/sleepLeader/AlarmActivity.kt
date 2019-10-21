@@ -17,10 +17,6 @@ class AlarmActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-            AlarmSet.setOnClickListener {
-                val intent = Intent(applicationContext, AlarmSetActivity::class.java)
-                startActivity(intent)
-            }
         realm = Realm.getDefaultInstance()
 
         val musicTable = realm.where<MusicTable>().equalTo("musicId",Id).findFirst()
@@ -42,6 +38,24 @@ class AlarmActivity : AppCompatActivity() {
                  }
             }else ->{
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        clockButton.setOnClickListener{
+            val intent = Intent(this,AlarmSetActivity::class.java)
+            startActivity(intent)
+        }
+
+        musicButton.setOnClickListener{
+            val intent = Intent(this,MusicActivity::class.java)
+            startActivity(intent)
+        }
+
+        listButton.setOnClickListener{
+            val intent = Intent(this,AlarmListActivity::class.java)
+            startActivity(intent)
         }
     }
 
