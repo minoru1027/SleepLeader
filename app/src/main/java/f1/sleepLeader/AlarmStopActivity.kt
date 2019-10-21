@@ -1,5 +1,6 @@
 package f1.sleepLeader
 
+
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -9,10 +10,13 @@ import android.os.Bundle
 import java.util.*
 
 class AlarmStopActivity : AppCompatActivity() {
-
+    
+  private var timerList : HashMap<Long,String> = hashMapOf()
+  
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_stop)
+        timerList = intent?.getSerializableExtra("timerList") as HashMap<Long, String>
     }
 
     override fun onResume() {
@@ -43,3 +47,4 @@ class AlarmStopActivity : AppCompatActivity() {
 
     }
 }
+

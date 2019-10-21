@@ -21,6 +21,10 @@
         </activity>
 
         <receiver android:name=".AlarmReceiver" />
+
+        <activity android:name=".AlarmListActivity">
+        </activity>
+        <receiver android:name=".AlarmBroadcastReceiver"></receiver>
     </application>
 
 </manifest>
