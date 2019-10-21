@@ -1,7 +1,9 @@
 package f1.sleepLeader
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_main.*
 import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.createObject
@@ -15,6 +17,10 @@ class AlarmActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+            AlarmSet.setOnClickListener {
+                val intent = Intent(applicationContext, AlarmSetActivity::class.java)
+                startActivity(intent)
+            }
         realm = Realm.getDefaultInstance()
 
         val musicTable = realm.where<MusicTable>().equalTo("musicId",Id).findFirst()

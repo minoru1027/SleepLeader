@@ -1,24 +1,50 @@
 package f1.sleepLeader
 
-import android.media.AudioManager
-import android.media.SoundPool
-import android.os.Bundle
+
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
-import kotlin.concurrent.timer
+import android.os.Bundle
+import java.util.*
 
 class AlarmStopActivity : AppCompatActivity() {
-    private lateinit var soundPool: SoundPool
-    private var soundResId = 0
-    private var timerList : HashMap<Long,String> = hashMapOf()
+    
+  private var timerList : HashMap<Long,String> = hashMapOf()
+  
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_stop)
-
-        soundPool = SoundPool(2,AudioManager.STREAM_ALARM,0)
-        soundResId = soundPool.load(this,R.raw.machinegun2,1)
-        soundPool.play(soundResId,1.0f,100f,0,0,1.0f)
         timerList = intent?.getSerializableExtra("timerList") as HashMap<Long, String>
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        var table = AlarmTable()
+        var Snooze =table.snoozeFlag
+        var setSnooze = "OFF"
+
+        if(Snooze.equals("ON")){
+            onSetSnooze()
+
+            table.snoozeFlag = setSnooze
+        }
+    }
+
+    private fun onSetSnooze(){
+        var calendar: Calendar = Calendar.getInstance()
+        calendar.add(Calendar.MINUTE,5)
+
+        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+
 
 
     }
 }
+
