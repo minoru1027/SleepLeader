@@ -8,64 +8,79 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import io.realm.Realm
+import io.realm.kotlin.createObject
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_alarm_set.*
+import java.lang.IllegalArgumentException
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class AlarmSetActivity : AppCompatActivity() {
+
+    private lateinit var realm : Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_set)
 
+        realm = Realm.getDefaultInstance()
 
         AlarmSetting.setOnClickListener {
-
-            var table = AlarmTable()
-
-            //アラームID
-            var alarmId: Long = 1
-            table.alarmId = alarmId
-
-            println(table.alarmId)
-
-            //設定した時間
-            var hour = SetTime.text.toString()
-            var min = SetMinute.text.toString()
-            table.timer = hour +":"+ min
-
-            println(table.timer)
-
-            //スヌーズ設定
-            var snoozeFlag = "ON"
-            table.snoozeFlag = snoozeFlag
-
-            println(table.snoozeFlag)
-
-            //音楽の再生設定
-            var musicFlag = "ON"
-            table.musicFlag = musicFlag
-
-            println(table.musicFlag)
-
-            //音楽のファイルパス
-            var musicPath = "www"
-            table.musicPath = musicPath
-
-            println(table.musicPath)
-
-            var sec = setSecond()
             var calendar: Calendar = Calendar.getInstance()
-            calendar.add(Calendar.SECOND,sec)
+            realm.executeTransaction {
+                var maxId = realm.where<AlarmTable>().max("alarmId")
+                var nextId = (maxId?.toLong() ?: 0L) + 1
+                var alarm = realm.createObject<AlarmTable>(nextId)
 
-            val alarmIntent = Intent(this, AlarmReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                println(alarm.alarmId)
 
-            val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+                //設定した時間
+                var h = SetTime.text.toString()
+                var m = SetMinute.text.toString()
+                var hour = Integer.parseInt(h)
+                var min = Integer.parseInt(m)
+                var time = "%1$02d:%2$02d".format(hour,min)
+                alarm.timer = time
+                println(alarm.timer)
 
-           // val intent = Intent(applicationContext, AlarmStopActivity::class.java)
-            // startActivity(intent)
+                //スヌーズ設定
+                var snoozeFlag = "ON"
+                alarm.snoozeFlag = snoozeFlag
 
+                println(alarm.snoozeFlag)
+
+                //音楽の再生設定
+                var musicFlag = "ON"
+                alarm.musicFlag = musicFlag
+
+                println(alarm.musicFlag)
+
+                //音楽のファイルパス
+                var musicPath = "www"
+                alarm.musicPath = musicPath
+
+                println(alarm.musicPath)
+            }
+                var sec = setSecond()
+
+                calendar.add(Calendar.SECOND, sec)
+
+                val alarmIntent = Intent(this, AlarmReceiver::class.java)
+                val pendingIntent = PendingIntent.getBroadcast(
+                    this,
+                    0,
+                    alarmIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+
+                val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+
+                val intent = Intent(applicationContext, AlarmStopActivity::class.java)
+                startActivity(intent)
         }
 
     }
@@ -119,5 +134,21 @@ class AlarmSetActivity : AppCompatActivity() {
 
         return sec
 
+    }
+    private fun String.toDate(time : String = "HH:mm") : Date?{
+        val sdTimer = try{
+            SimpleDateFormat(time)
+        }catch (e: IllegalArgumentException){
+            null
+        }
+
+        val timer = sdTimer?.let{
+            try{
+                it.parse(this)
+            }catch (e: ParseException){
+                null
+            }
+        }
+        return timer
     }
 }

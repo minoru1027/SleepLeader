@@ -16,7 +16,7 @@ class AlarmStopActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_stop)
-        timerList = intent?.getSerializableExtra("timerList") as HashMap<Long, String>
+        //timerList = intent?.getSerializableExtra("timerList") as HashMap<Long, String>
     }
 
     override fun onResume() {
