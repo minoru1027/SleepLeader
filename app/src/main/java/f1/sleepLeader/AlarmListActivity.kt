@@ -57,11 +57,11 @@ class AlarmListActivity : AppCompatActivity() {
         }
 
         alarmStopButtom.setOnClickListener{
-
             val calendar = Calendar.getInstance()
             val calendarNow = Calendar.getInstance()
             val timeNow= getNow()
             calendarNow.time = timeNow
+
             for((key,value) in timerList){
                 val timeSet = timerList.get(key)?.toDate()
                 calendar.time = timeSet
@@ -80,9 +80,11 @@ class AlarmListActivity : AppCompatActivity() {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setAlarmManager(calendar: Calendar){
+
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this,AlarmBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+                                                            //多分、これ↓
+        val pendingIntent = PendingIntent.getBroadcast(this,requestCode(),intent,PendingIntent.FLAG_UPDATE_CURRENT)
         when{
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ->{
                 val info = AlarmManager.AlarmClockInfo(
@@ -110,6 +112,7 @@ class AlarmListActivity : AppCompatActivity() {
             }
         }
     }
+
      private fun String.toDate(time : String = "HH:mm") : Date?{
          val sdTimer = try{
              SimpleDateFormat(time)
@@ -126,6 +129,7 @@ class AlarmListActivity : AppCompatActivity() {
          }
          return timer
      }
+
      private fun getNow() : Date?{
          val calendarNow = Calendar.getInstance()
          val hour  = calendarNow.get(Calendar.HOUR_OF_DAY).toString()
@@ -135,8 +139,23 @@ class AlarmListActivity : AppCompatActivity() {
 
          return timerNow
      }
+
      override fun onDestroy() {
          super.onDestroy()
          realm.close()
      }
+
+    private fun requestCode():Int{
+        var requestCode = 0
+
+        return requestCode++
+    }
+
+    open fun stopAlarmList(){
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = PendingIntent.getBroadcast(this,requestCode(),intent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        alarmManager.cancel(pendingIntent)
+
+    }
 }
