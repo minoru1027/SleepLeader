@@ -30,7 +30,6 @@ class AlarmSetActivity : AppCompatActivity() {
     private lateinit var realm : Realm
     private var musicPath : String = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_set)
@@ -79,9 +78,9 @@ class AlarmSetActivity : AppCompatActivity() {
                 var m = SetMinute.text.toString()
                 var hour = Integer.parseInt(h)
                 var min = Integer.parseInt(m)
-                var time = "%1$02d:%2$02d".format(hour,min)
+                var time = "%1$02d:%2$02d".format(hour, min)
 
-                intent.putExtra("setTime",time)
+                intent.putExtra("setTime", time)
 
                 alarm.timer = time
 
@@ -96,10 +95,11 @@ class AlarmSetActivity : AppCompatActivity() {
 
                 //音楽のファイルパス
                 alarm.musicPath = musicPath
-            }
-            var sec = setSecond()
 
-            calendar.add(Calendar.SECOND, sec)
+
+                var sec = setSecond()
+
+                calendar.add(Calendar.SECOND, sec)
 
                 val alarmIntent = Intent(this, AlarmReceiver::class.java)
                 val pendingIntent = PendingIntent.getBroadcast(
@@ -114,10 +114,11 @@ class AlarmSetActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, AlarmStopActivity::class.java)
 
                 var activity = "0"
-                intent.putExtra("activityFlag",activity)
-
+                intent.putExtra("activityFlag", activity)
+                intent.putExtra("musicFlag",alarm.musicFlag)
+                intent.putExtra("musicPath",alarm.musicPath)
                 startActivity(intent)
-
+            }
         }
     }
     private fun setHour(): Int {

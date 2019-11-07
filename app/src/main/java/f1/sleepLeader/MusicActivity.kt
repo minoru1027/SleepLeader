@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_alarm_list.*
+import java.lang.RuntimeException
 
 class MusicActivity : AppCompatActivity() {
 
@@ -32,10 +33,10 @@ class MusicActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         listView.setOnItemClickListener{ parent, view, position, id ->
-            val musicListPosition = parent.getItemAtPosition(position) as MusicTable
-            val res = this.resources
-            var soundId = res.getIdentifier(musicListPosition.musicPath,"raw",this.packageName)
-            if(musicFlag == true){
+                val musicListPosition = parent.getItemAtPosition(position) as MusicTable
+                val res = this.resources
+                var soundId = res.getIdentifier(musicListPosition.musicPath,"raw",this.packageName)
+                if(musicFlag == true){
                 player.stop()
                 player.reset()
                 player.release()
@@ -54,16 +55,28 @@ class MusicActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        player.stop()
-        player.reset()
-        player.release()
-        musicFlag = false
+        try {
+            player.stop()
+            player.reset()
+            player.release()
+            musicFlag = false
+        }catch (e : IllegalStateException){
+            println(e)
+        }catch (e: RuntimeException){
+            println(e)
+        }
     }
     override fun onDestroy() {
         super.onDestroy()
-        player.stop()
-        player.reset()
-        player.release()
-        musicFlag = false
+        try {
+            player.stop()
+            player.reset()
+            player.release()
+            musicFlag = false
+        }catch(e : java.lang.IllegalStateException){
+            println(e)
+        }catch(e : RuntimeException){
+            println(e)
+        }
     }
 }
