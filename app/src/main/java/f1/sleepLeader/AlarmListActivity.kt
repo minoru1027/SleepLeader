@@ -42,15 +42,6 @@ class AlarmListActivity : AppCompatActivity() {
 
         realm = Realm.getDefaultInstance()
 
-        /*realm.executeTransaction{
-            var maxId = realm.where<AlarmTable>().max("alarmId")
-            var nextId = (maxId?.toLong() ?: 0L) +1
-            var alarm = realm.createObject<AlarmTable>(nextId)
-            alarm.timer="12:08"
-            alarm.musicPath="www"
-            alarm.musicFlag="ON"
-            alarm.snoozeFlag="ON"
-        }*/
         val alarmList = realm.where<AlarmTable>().findAll()
         listView.adapter = alarmListAdapter(alarmList)
     }
