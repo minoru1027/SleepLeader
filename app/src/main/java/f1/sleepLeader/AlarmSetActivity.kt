@@ -17,6 +17,7 @@ import java.lang.IllegalArgumentException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.concurrent.timer
 
 
 class AlarmSetActivity : AppCompatActivity() {
@@ -44,6 +45,9 @@ class AlarmSetActivity : AppCompatActivity() {
                 var hour = Integer.parseInt(h)
                 var min = Integer.parseInt(m)
                 var time = "%1$02d:%2$02d".format(hour,min)
+
+                intent.putExtra("setTime",time)
+
                 alarm.timer = time
                 println(alarm.timer)
 
@@ -64,6 +68,7 @@ class AlarmSetActivity : AppCompatActivity() {
                 alarm.musicPath = musicPath
 
                 println(alarm.musicPath)
+
             }
                 var sec = setSecond()
 
@@ -72,15 +77,21 @@ class AlarmSetActivity : AppCompatActivity() {
                 val alarmIntent = Intent(this, AlarmReceiver::class.java)
                 val pendingIntent = PendingIntent.getBroadcast(
                     this,
-                    0,
+                    9,
                     alarmIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
+
+
 
                 val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
 
                 val intent = Intent(applicationContext, AlarmStopActivity::class.java)
+
+                var activity = "0"
+                intent.putExtra("activityFlag",activity)
+
                 startActivity(intent)
         }
 
@@ -151,5 +162,17 @@ class AlarmSetActivity : AppCompatActivity() {
             }
         }
         return timer
+    }
+
+    open fun stopAlarmSet(){
+        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            9,
+            alarmIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        manager.cancel(pendingIntent)
     }
 }
