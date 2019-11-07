@@ -8,19 +8,33 @@ import android.content.Intent
 import android.os.Bundle
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_alarm_stop.*
+import java.lang.reflect.Array.get
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.math.max
 
 class AlarmStopActivity : AppCompatActivity(){
-    
-  private var timerList : HashMap<Long,String> = hashMapOf()
+
+    private lateinit var realm : Realm
+    private var timerList : HashMap<Long,String> = hashMapOf()
     private var mediaPlayer = MediaPlayer()
   
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_stop)
 
+        realm = Realm.getDefaultInstance()
+
+        val musicFlag = intent.getStringExtra("musicFlag")
+        val musicPath = intent.getStringExtra("musicPath")
+        val res = this.resources
+        val path = MusicRandom()
+        var soundId = res.getIdentifier(path,"raw",this.packageName)
+        mediaPlayer = MediaPlayer.create(this,soundId)
+        mediaPlayer.start()
     }
 
     override fun onResume() {
@@ -129,12 +143,40 @@ class AlarmStopActivity : AppCompatActivity(){
 
     }
 
-    private fun MusicRandom(){
+    private fun MusicRandom() : String{
+        var maxId = realm.where<MusicTable>().max("musicId")
+        var randomId = (maxId?.toInt() ?: 0)+1
         val random = Random()
-        val music = MusicTable()
-        val musicList = music.musicId
+        var pathId = random.nextInt(randomId)
+        while(pathId <= 0){
+            pathId = (maxId?.toInt() ?: 0)+1
+        }
+        val musicId = realm.where<MusicTable>().equalTo("musicId",pathId).findFirst()
+        val musicPath = musicId?.musicPath.toString()
 
-        random.longs(musicList)
+        return musicPath
     }
+
+    override fun onStop() {
+        super.onStop()
+        try {
+            mediaPlayer.stop()
+            mediaPlayer.reset()
+            mediaPlayer.release()
+        }catch (e:IllegalStateException){
+            println(e)
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            mediaPlayer.stop()
+            mediaPlayer.reset()
+            mediaPlayer.release()
+        }catch (e:IllegalStateException){
+            println(e)
+        }
+    }
+
 }
 
