@@ -12,16 +12,23 @@ import io.realm.kotlin.where
 
 class AlarmActivity : AppCompatActivity() {
 
-    private lateinit var realm : Realm
+    private lateinit var musicRealm : Realm
+    private lateinit var musicAlarmRealm : Realm
     private val Id :Long = 1
+    private val alarmId : Long = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        realm = Realm.getDefaultInstance()
+        musicRealm = Realm.getDefaultInstance()
+        musicAlarmRealm = Realm.getDefaultInstance()
 
-        val musicTable = realm.where<MusicTable>().equalTo("musicId",Id).findFirst()
+        val musicTable = musicRealm.where<MusicTable>().equalTo("musicId",Id).findFirst()
+        val musicAlarmTable = musicAlarmRealm.where<MusicAlarmTable>().equalTo("musicAlarmId",alarmId).findFirst()
         var musicid = musicTable?.musicId
+        var musicAlarmId = musicAlarmTable?.musicAlarmId
+
         when(musicid){
              null->{
                  val musicName : Array<String> = arrayOf("日の陰り","Moon","静止した宇宙","夜空に舞う鳥","夕べの星")
@@ -31,16 +38,38 @@ class AlarmActivity : AppCompatActivity() {
                      if(i == musicName.size){
                          break
                      }else{
-                        realm.executeTransaction {
-                            var maxId = realm.where<MusicTable>().max("musicId")
+                         musicRealm.executeTransaction {
+                            var maxId = musicRealm.where<MusicTable>().max("musicId")
                             var nextId = (maxId?.toLong() ?: 0L) + 1
-                            var music = realm.createObject<MusicTable>(nextId)
+                            var music = musicRealm.createObject<MusicTable>(nextId)
                             music.musicName = musicName[i]
                             music.musicPath = musicPath[i]
                             i++
                         }
                     }
                  }
+            }
+        }
+
+        when(musicAlarmId){
+            null->{
+                val musicAlarmName : Array<String> = arrayOf("チョコレート大作戦","ファミポップⅣ","軽序曲","長靴でお出かけ","吹奏楽部の夏")
+                val musicAlarmPath : Array<String> = arrayOf("chocolatedaisakusen","famipop4","keijokyoku","nagagutsudeodekake","suisougakubunonatsu")
+                var i = 0
+                while(i != musicAlarmName.size){
+                    if(i == musicAlarmName.size){
+                        break
+                    }else{
+                        musicAlarmRealm.executeTransaction {
+                            var maxId = musicAlarmRealm.where<MusicAlarmTable>().max("musicAlarmId")
+                            var nextId = (maxId?.toLong() ?: 0L) + 1
+                            var music = musicAlarmRealm.createObject<MusicAlarmTable>(nextId)
+                            music.musicAlarmName = musicAlarmName[i]
+                            music.musicAlarmPath = musicAlarmPath[i]
+                            i++
+                        }
+                    }
+                }
             }
         }
     }
@@ -65,6 +94,7 @@ class AlarmActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        realm.close()
+        musicRealm.close()
+        musicAlarmRealm.close()
     }
 }
