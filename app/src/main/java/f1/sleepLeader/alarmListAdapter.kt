@@ -1,19 +1,30 @@
 package f1.sleepLeader
+import android.content.Context
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import io.realm.OrderedRealmCollection
 import io.realm.RealmBaseAdapter
+import java.lang.IllegalArgumentException
 import java.text.FieldPosition
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.timerTask
 
 
-class alarmListAdapter(data: OrderedRealmCollection<AlarmTable>?) : RealmBaseAdapter<AlarmTable>(data) {
+class alarmListAdapter(context : Context,alarmListTimer : List<timerData>) : ArrayAdapter<timerData>(context,0,alarmListTimer){
 
     inner class ViewHolder(cell:View){
         val timer = cell.findViewById<TextView>(android.R.id.text1)
         var id:Long =0
+        var musicPath : String = ""
+        var musicFlag : String = ""
+        var snoozeFlag  : String = ""
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view : View
@@ -31,11 +42,9 @@ class alarmListAdapter(data: OrderedRealmCollection<AlarmTable>?) : RealmBaseAda
             }
         }
 
-        adapterData?.run{
-            val alarmTimer = get(position)
-            viewHolder.timer.text =  alarmTimer.timer
-            viewHolder.id = alarmTimer.alarmId
-        }
+        val timerList = getItem(position) as timerData
+        viewHolder.id = timerList.alarmId.toLong()
+        viewHolder.timer.text = timerList.alarmTime
 
         return view
     }
