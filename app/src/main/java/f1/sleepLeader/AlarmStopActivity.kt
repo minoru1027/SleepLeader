@@ -29,13 +29,13 @@ class AlarmStopActivity : AppCompatActivity(){
 
         realm = Realm.getDefaultInstance()
 
-        val musicFlag = intent.getStringExtra("musicFlag")
+        /*val musicFlag = intent.getStringExtra("musicFlag")
         val musicPath = intent.getStringExtra("musicPath")
         val res = this.resources
         val path = MusicRandom()
         var soundId = res.getIdentifier(path,"raw",this.packageName)
         mediaPlayer = MediaPlayer.create(this,soundId)
-        mediaPlayer.start()
+        mediaPlayer.start()*/
     }
 
     override fun onResume() {
@@ -61,6 +61,7 @@ class AlarmStopActivity : AppCompatActivity(){
         setList.forEach {
 
             switch2.setOnCheckedChangeListener {_,isChecked: Boolean ->
+
                 if (isChecked) {
                     audioStop()
 
@@ -79,34 +80,36 @@ class AlarmStopActivity : AppCompatActivity(){
 
                     }
 
-              }else if (!isChecked){
+
+                }else if (!isChecked){
+
+                }
+            }*/
+        }
+/*            Return.setOnClickListener{ <-戻るボタンを押したときの処理です
+                if(activityFlag.equals("9")){
+                    alarmSetCancel()
+
+                    val intent = Intent(applicationContext, AlarmActivity::class.java)
+                    startActivity(intent)
+
+                }else{
+                    alarmListCancel()
+
+                    val intent = Intent(applicationContext, AlarmActivity::class.java)
+                    startActivity(intent)
 
                 }
             }
-        }
-//            Return.setOnClickListener{ <-
-//                if(activityFlag.equals("9")){
-//                    alarmSetCancel()
-//
-//                    val intent = Intent(applicationContext, AlarmActivity::class.java)
-//                    startActivity(intent)
-//
-//                }else{
-//                    alarmListCancel()
-//
-//                    val intent = Intent(applicationContext, AlarmActivity::class.java)
-//                    startActivity(intent)
-//
-//                }
-//            }
 
-//        Random.setOnClickListener{
-//            if(){
-//
-//            }else{
-//
-//           }
-//        }
+        Random.setOnClickListener{
+            if(){
+
+            }else{
+
+            }
+        }*/
+
     }
 
     private fun onSetSnooze(){
