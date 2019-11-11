@@ -28,13 +28,13 @@ class AlarmStopActivity : AppCompatActivity(){
 
         realm = Realm.getDefaultInstance()
 
-        val musicFlag = intent.getStringExtra("musicFlag")
+        /*val musicFlag = intent.getStringExtra("musicFlag")
         val musicPath = intent.getStringExtra("musicPath")
         val res = this.resources
         val path = MusicRandom()
         var soundId = res.getIdentifier(path,"raw",this.packageName)
         mediaPlayer = MediaPlayer.create(this,soundId)
-        mediaPlayer.start()
+        mediaPlayer.start()*/
     }
 
     override fun onResume() {
@@ -58,53 +58,53 @@ class AlarmStopActivity : AppCompatActivity(){
 
         setList.forEach {
 
-//            AlarmStop.setOnCheckedChangeListener {_,isChecked: Boolean ->
-//                if (isChecked) {
-//                    audioStop()
-//
-//                    if (activityFlag.equals("9")) {
-//                        AlarmTime.setText(getPara)
-//
-//                        val intent = Intent(applicationContext, AlarmActivity::class.java)
-//                        startActivity(intent)
-//
-//                    } else if (activityFlag.equals("0") || activityFlag.equals("1") || activityFlag.equals("2") || activityFlag.equals("3") || activityFlag.equals("4")) {
-//                        AlarmTime.setText(setList)
-//
-//                    } else {
-//                        val intent = Intent(applicationContext, AlarmActivity::class.java)
-//                        startActivity(intent)
-//
-//                    }
-//
-//                }else if (!isChecked){
-//
-//                }
-//            }
-        }
-//            Return.setOnClickListener{ <-戻るボタンを押したときの処理です
-//                if(activityFlag.equals("9")){
-//                    alarmSetCancel()
-//
-//                    val intent = Intent(applicationContext, AlarmActivity::class.java)
-//                    startActivity(intent)
-//
-//                }else{
-//                    alarmListCancel()
-//
-//                    val intent = Intent(applicationContext, AlarmActivity::class.java)
-//                    startActivity(intent)
-//
-//                }
-//            }
+            /*AlarmStop.setOnCheckedChangeListener {_,isChecked: Boolean ->
+                if (isChecked) {
+                    audioStop()
 
-//        Random.setOnClickListener{
-//            if(){
-//
-//            }else{
-//
-//            }
-//        }
+                    if (activityFlag.equals("9")) {
+                        AlarmTime.setText(getPara)
+
+                        val intent = Intent(applicationContext, AlarmActivity::class.java)
+                        startActivity(intent)
+
+                    } else if (activityFlag.equals("0") || activityFlag.equals("1") || activityFlag.equals("2") || activityFlag.equals("3") || activityFlag.equals("4")) {
+                        AlarmTime.setText(setList)
+
+                    } else {
+                        val intent = Intent(applicationContext, AlarmActivity::class.java)
+                        startActivity(intent)
+
+                    }
+
+                }else if (!isChecked){
+
+                }
+            }*/
+        }
+/*            Return.setOnClickListener{ <-戻るボタンを押したときの処理です
+                if(activityFlag.equals("9")){
+                    alarmSetCancel()
+
+                    val intent = Intent(applicationContext, AlarmActivity::class.java)
+                    startActivity(intent)
+
+                }else{
+                    alarmListCancel()
+
+                    val intent = Intent(applicationContext, AlarmActivity::class.java)
+                    startActivity(intent)
+
+                }
+            }
+
+        Random.setOnClickListener{
+            if(){
+
+            }else{
+
+            }
+        }*/
     }
 
     private fun onSetSnooze(){
