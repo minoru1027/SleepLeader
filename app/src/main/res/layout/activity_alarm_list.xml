@@ -8,12 +8,16 @@
         tools:context=".AlarmListActivity">
 
     <ListView
-            android:layout_width="0dp"
-            android:layout_height="565dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/listView"
-            app:layout_constraintHorizontal_bias="1.0" app:layout_constraintVertical_bias="0.0"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/button"/>
+            android:layout_width="0dp"
+            android:layout_height="565dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/alarmStopButtom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
     <Button
             android:text="Button"
             android:layout_width="wrap_content"
