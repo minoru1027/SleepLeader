@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.media.MediaPlayer
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.kotlin.where
@@ -39,6 +40,7 @@ class AlarmStopActivity : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
+        val switch = findViewById<Switch>(R.id.switch2)
 
         //timerList = intent?.getSerializableExtra("timerList") as HashMap<Long, String>
         var setList = mutableListOf(timerList).toString()
@@ -58,7 +60,8 @@ class AlarmStopActivity : AppCompatActivity(){
 
         setList.forEach {
 
-            /*AlarmStop.setOnCheckedChangeListener {_,isChecked: Boolean ->
+            switch2.setOnCheckedChangeListener {_,isChecked: Boolean ->
+
                 if (isChecked) {
                     audioStop()
 
@@ -76,6 +79,7 @@ class AlarmStopActivity : AppCompatActivity(){
                         startActivity(intent)
 
                     }
+
 
                 }else if (!isChecked){
 
@@ -105,6 +109,7 @@ class AlarmStopActivity : AppCompatActivity(){
 
             }
         }*/
+
     }
 
     private fun onSetSnooze(){
