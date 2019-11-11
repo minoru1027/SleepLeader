@@ -6,8 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.kotlin.where
-import kotlinx.android.synthetic.main.activity_alarm_list.*
-import kotlinx.android.synthetic.main.activity_alarm_list.musicListView
 import kotlinx.android.synthetic.main.activity_music.*
 import java.lang.RuntimeException
 
