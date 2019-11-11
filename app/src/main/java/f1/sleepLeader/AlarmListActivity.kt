@@ -43,8 +43,9 @@ class AlarmListActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
 
         val alarmList = realm.where<AlarmTable>().findAll()
-
+      
         sortList(alarmList)
+
     }
 
     override fun onResume() {
