@@ -35,12 +35,12 @@ class AlarmListActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
 
         val alarmList = realm.where<AlarmTable>().findAll()
-        musicListView.adapter = alarmListAdapter(alarmList)
+        listView.adapter = alarmListAdapter(alarmList)
     }
 
     override fun onResume() {
         super.onResume()
-        musicListView.setOnItemClickListener { parent, view, position, id ->
+        listView.setOnItemClickListener { parent, view, position, id ->
             val timePosition = parent.getItemAtPosition(position) as AlarmTable
             val alarmId = timePosition.alarmId
             timer = timePosition.timer
