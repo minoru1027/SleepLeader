@@ -45,6 +45,14 @@ class AlarmSetActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        timePicker.setOnClickListener {
+            val newFragment = TimePickerFragment()
+            newFragment.show(supportFragmentManager, "Time Picker")
+
+        }
+
+
+
         musicFlag.setOnClickListener{
             if(musicFlag.isChecked === true) {
                 musicSpinner.visibility = View.VISIBLE
@@ -67,6 +75,9 @@ class AlarmSetActivity : AppCompatActivity() {
             }
         }
         AlarmSetting.setOnClickListener {
+            val test = timePicker.text.toString()
+
+            println(test)
             var calendar: Calendar = Calendar.getInstance()
             realm.executeTransaction {
                 var maxId = realm.where<AlarmTable>().max("alarmId")
