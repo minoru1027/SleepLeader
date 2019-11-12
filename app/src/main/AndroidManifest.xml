@@ -10,14 +10,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".FadeIn">
-        </activity>
-        <activity android:name=".AlarmStopActivity" />
-        <activity android:name=".AlarmSetActivity" />
-        <activity android:name=".MusicActivity">
 
-        </activity>
-        <activity android:name=".AlarmActivity">
+        <activity android:name=".FadeIn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,9 +19,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".AlarmActivity" />
+        <activity android:name=".AlarmStopActivity" />
+        <activity android:name=".AlarmSetActivity" />
+        <activity android:name=".MusicActivity" />
         <receiver android:name=".AlarmReceiver" />
-
-        <activity android:name=".AlarmListActivity"></activity>
+        <activity android:name=".AlarmListActivity" />
 
         <receiver android:name=".AlarmBroadcastReceiver" />
     </application>
