@@ -41,7 +41,7 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
         if(zone.equals("PM")){
             hour += 12
         }
-        tv.text = "${getHourAMPM(hour)}:$minute"
+        tv.text = "%1$02d:%2$02d".format(getHourAMPM(hour),minute)
 
     }
     override fun onCancel(dialog: DialogInterface?) {
