@@ -84,7 +84,7 @@ class AlarmStopActivity : AppCompatActivity(){
                 }else if (!isChecked){
 
                 }
-            }*/
+            }
         }
 /*            Return.setOnClickListener{ <-戻るボタンを押したときの処理です
                 if(activityFlag.equals("9")){
