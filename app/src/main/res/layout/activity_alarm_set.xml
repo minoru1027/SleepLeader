@@ -11,8 +11,8 @@
 
     <Button
             android:id="@+id/AlarmSetting"
-            android:layout_width="157dp"
-            android:layout_height="52dp"
+            android:layout_width="177dp"
+            android:layout_height="68dp"
             android:layout_marginTop="128dp"
             android:background="@drawable/radius"
             android:text="設定"
@@ -22,56 +22,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/musicSpinner" />
 
-    <EditText
-            android:id="@+id/SetTime"
-            android:layout_width="260dp"
-            android:layout_height="75dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:hint="何時かを入力してください"
-            android:inputType="number"
-            android:textColor="#fffaf0"
-            android:textColorHint="#fffaf0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <EditText
-            android:id="@+id/SetMinute"
-            android:layout_width="260dp"
-            android:layout_height="75dp"
-            android:layout_marginTop="24dp"
-            android:ems="10"
-            android:hint="何分かを入力してください"
-            android:inputType="number"
-            android:textColor="#fffaf0"
-            android:textColorHint="#fffaf0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/SetTime" />
-
-    <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="24時間表示で入力してください"
-            android:textColor="#fffaf0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
     <Switch
             android:id="@+id/musicFlag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="音楽を固定にする"
+            android:layout_width="200dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="20dp"
+            android:text="musiclock"
             android:textColor="#fffaf0"
             android:textColorHint="#fffaf0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.71"
+            app:layout_constraintHorizontal_bias="0.677"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/snoozeFlag" />
 
@@ -84,18 +44,46 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.793"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/musicFlag" />
+            app:layout_constraintTop_toBottomOf="@+id/musicFlag"
+
+            />
 
     <Switch
             android:id="@+id/snoozeFlag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="スヌーズをセットする"
+            android:layout_width="200dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="50dp"
+            android:text="スヌーズ"
             android:textColor="#fffaf0"
             android:textColorHint="#fffaf0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.675"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/SetMinute" />
+            app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+
+    <TextView
+            android:id="@+id/timePicker"
+            android:layout_width="294dp"
+            android:layout_height="68dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="116dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="起床時間を設定する"
+            android:textColor="#fffaf0"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="43dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="276dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/snoozeFlag"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@mipmap/touch" />
 </androidx.constraintlayout.widget.ConstraintLayout>
