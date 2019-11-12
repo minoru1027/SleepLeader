@@ -51,12 +51,9 @@ class AlarmListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         listView.setOnItemClickListener { parent, view, position, id ->
-            val timePosition = parent.getItemAtPosition(position) as AlarmTable
-            val alarmId = timePosition.alarmId
-            timer = timePosition.timer
-            musicFlag = timePosition.musicFlag
-            musicPath = timePosition.musicPath
-            snoozeFlag = timePosition.snoozeFlag
+            val timePosition = parent.getItemAtPosition(position) as timerData
+            val alarmId = timePosition.alarmId.toLong()
+            timer = timePosition.alarmTime
 
             selectedTimer(alarmId,timer)
 
@@ -76,11 +73,11 @@ class AlarmListActivity : AppCompatActivity() {
                 }
                 var timeMill = calendar.timeInMillis - calendarNow.timeInMillis
                 calendar.timeInMillis = timeMill
-                println(calendar.timeInMillis)
+
                 setAlarmManager(calendar)
                 time.add(calendar)
             }
-            startActivity<AlarmStopActivity>("timerList" to timerList)
+            startActivity<AlarmStopActivity>("timerList" to timerList,"activityFlag" to "1")
         }
     }
 
