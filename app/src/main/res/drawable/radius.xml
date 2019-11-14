@@ -9,8 +9,13 @@
                     android:topLeftRadius="30dp"
                     />
             <solid
-                    android:color="@color/button_material_light"
+                    android:color="#00000000"
+
                     />
+            <stroke
+                android:width="2dp"
+                android:color="#fffaf0" />
+
         </shape>
     </item>
 </selector>
