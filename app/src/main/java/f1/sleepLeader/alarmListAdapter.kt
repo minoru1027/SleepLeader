@@ -26,8 +26,8 @@ class alarmListAdapter(data: OrderedRealmCollection<AlarmTable>?) : RealmBaseAda
                 viewHolder = ViewHolder(view)
                 view.tag = viewHolder
             }else -> {
-            view = convertView
-            viewHolder = view.tag as ViewHolder
+                view = convertView
+                viewHolder = view.tag as ViewHolder
             }
         }
 

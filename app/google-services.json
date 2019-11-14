@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "758877204496",
+    "firebase_url": "https://test-1aa1d.firebaseio.com",
+    "project_id": "test-1aa1d",
+    "storage_bucket": "test-1aa1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758877204496:android:811cff7435d930689bda95",
+        "android_client_info": {
+          "package_name": "f1.sleepLeader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758877204496-b33agvv3i75ngop0kvomavc2durohqsb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSMZbXgXd3naSuv8eX2XruqIlut5A7yjY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758877204496-b33agvv3i75ngop0kvomavc2durohqsb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
