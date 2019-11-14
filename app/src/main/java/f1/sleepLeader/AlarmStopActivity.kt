@@ -45,12 +45,11 @@ class AlarmStopActivity : AppCompatActivity(){
         val activityFlag = intent.getStringExtra("activityFlag")
         var getPara = intent.getStringExtra("setTime")
 
-
         var table = AlarmTable()
         var Snooze =table.snoozeFlag
-        var setSnooze = "OFF"
+        var setSnooze = "False"
 
-        if(Snooze.equals("ON")){
+        if(Snooze.equals("True")){
             onSetSnooze()
 
             table.snoozeFlag = setSnooze
@@ -74,7 +73,6 @@ class AlarmStopActivity : AppCompatActivity(){
 //                    } else {
 //                        val intent = Intent(applicationContext, AlarmActivity::class.java)
 //                        startActivity(intent)
-//
 //                    }
 //
 //                }else if (!isChecked){
@@ -133,14 +131,16 @@ class AlarmStopActivity : AppCompatActivity(){
 
     private fun alarmSetCancel(){
         val alarmSet = AlarmSetActivity()
-        alarmSet.stopAlarmSet()
 
+        alarmSet.stopAlarmSet()
+        alarmSet.incSetCode()
     }
 
     private fun alarmListCancel(){
         val alarmList = AlarmListActivity()
-        alarmList.stopAlarmList()
 
+        alarmList.stopAlarmList()
+        alarmList.incListCode()
     }
 
     private fun MusicRandom() : String{
