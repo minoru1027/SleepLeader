@@ -9,10 +9,9 @@
             android:id="@+id/AlarmTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginTop="100dp"
-            android:layout_marginEnd="32dp"
             android:text="TextView"
+            android:textSize="128px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,6 +27,18 @@
             android:thumb="@drawable/switch_thumb"
             android:track="@drawable/switch_track"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AlarmTime" />
+
+    <TextView
+            android:id="@+id/nextTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="TextView"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.724"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/AlarmTime" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -87,7 +87,8 @@ class AlarmSetActivity : AppCompatActivity() {
                 //設定した時間
                 var time = timePicker.text.toString()
 
-                intent.putExtra("setTime", time)
+
+
 
                 alarm.timer = time
 
@@ -98,6 +99,7 @@ class AlarmSetActivity : AppCompatActivity() {
 
                 //音楽の再生設定
                 var music = musicFlag.isChecked.toString()
+                println(music)
                 alarm.musicFlag = music
 
                 //音楽のファイルパス
@@ -127,7 +129,9 @@ class AlarmSetActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, AlarmStopActivity::class.java)
 
                 var activity = "0"
+                intent.putExtra("setTime", time)
                 intent.putExtra("activityFlag", activity)
+                intent.putExtra("snoozeFlag",alarm.snoozeFlag)
                 intent.putExtra("musicFlag",alarm.musicFlag)
                 intent.putExtra("musicPath",alarm.musicPath)
                 startActivity(intent)
