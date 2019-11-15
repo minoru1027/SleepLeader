@@ -17,12 +17,15 @@ class FadeIn : AppCompatActivity() {
         val intent = Intent(this,AlarmActivity::class.java)
         val title: TextView = findViewById(R.id.title)
         val msg: TextView = findViewById(R.id.msg)
+        val name: TextView = findViewById(R.id.name)
 
         //フォント設定
         val titlefont = Typeface.createFromAsset(assets,"Barkentina.otf")
         val msgfont = Typeface.createFromAsset(assets,"kokugl.ttf")
+        val namefont = Typeface.createFromAsset(assets,"kokugl.ttf")
         title.setTypeface(titlefont)
         msg.setTypeface(msgfont)
+        name.setTypeface(namefont)
 
         //タイトル
         var animation = AlphaAnimation(1f,0f)
@@ -35,6 +38,7 @@ class FadeIn : AppCompatActivity() {
             animsg.duration = 5000
             animsg.fillAfter = true
         msg.startAnimation(animsg)
+        name.startAnimation(animsg)
 
         Handler().postDelayed({
             startActivity(intent)

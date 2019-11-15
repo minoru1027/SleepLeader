@@ -14,7 +14,7 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/list_design"
             android:divider="#fffaf0"
-            android:dividerHeight="1sp"
+            android:dividerHeight="7sp"
             app:layout_constraintBottom_toTopOf="@id/alarmStopButtom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
