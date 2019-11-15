@@ -27,6 +27,7 @@ class AlarmListActivity : AppCompatActivity() {
     private var timerList : HashMap<Long,String> = hashMapOf()
     private lateinit  var calendar : Calendar
     private lateinit var timer :String
+    private var requestCodeList = 200
     private lateinit var snoozeFlag:String
     private lateinit var musicFlag : String
     private lateinit var musicPath :String
@@ -86,20 +87,19 @@ class AlarmListActivity : AppCompatActivity() {
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(this,AlarmBroadcastReceiver::class.java)
-                                                            //多分、これ↓
-        val pendingIntent = PendingIntent.getBroadcast(this,9,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(this, requestCodeList, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         when{
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ->{
                 val info = AlarmManager.AlarmClockInfo(
                     calendar.timeInMillis,null)
-                alarmManager.setAlarmClock(info,pendingIntent)
+                alarmManager.setAlarmClock(info, pendingIntent)
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ->{
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,pendingIntent)
+                    calendar.timeInMillis, pendingIntent)
             }
             else ->{
-                alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,null)
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis,null)
             }
 
         }
@@ -184,15 +184,14 @@ class AlarmListActivity : AppCompatActivity() {
          realm.close()
      }
 
-    private fun requestCode():Int{
-        var requestCode = 0
-
-        return requestCode++
+    open fun incListCode(){
+        //アラームリストのリクエストコードの値を1個増やすよー
+        requestCodeList +=1
     }
 
     open fun stopAlarmList(){
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = PendingIntent.getBroadcast(this,requestCode(),intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(this, requestCodeList, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         alarmManager.cancel(pendingIntent)
 

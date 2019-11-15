@@ -206,7 +206,6 @@ class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
             this, accSensor,
             SensorManager.SENSOR_DELAY_GAME)
 
-
         //setList.forEach {
             //アラームを止めた後の処理
             switch2.setOnCheckedChangeListener {_,isChecked: Boolean ->
@@ -335,14 +334,16 @@ class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
 
     private fun alarmSetCancel(){
         val alarmSet = AlarmSetActivity()
-        alarmSet.stopAlarmSet()
 
+        alarmSet.stopAlarmSet()
+        alarmSet.incSetCode()
     }
 
     private fun alarmListCancel(){
         val alarmList = AlarmListActivity()
-        alarmList.stopAlarmList()
 
+        alarmList.stopAlarmList()
+        alarmList.incListCode()
     }
 
     private fun MusicRandom() : String{
