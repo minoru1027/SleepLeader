@@ -9,19 +9,36 @@
             android:id="@+id/AlarmTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="176dp"
-            android:layout_marginTop="187dp"
-            android:layout_marginEnd="176dp"
+            android:layout_marginTop="100dp"
             android:text="TextView"
+            android:textSize="128px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-            android:id="@+id/AlarmStop"
+    <Switch
+            android:id="@+id/switch2"
+            android:layout_width="wrap_content"
+            android:layout_height="88dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginEnd="32dp"
+            android:switchMinWidth="300dp"
+            android:thumb="@drawable/switch_thumb"
+            android:track="@drawable/switch_track"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AlarmTime" />
+
+    <TextView
+            android:id="@+id/nextTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"
-            tools:layout_editor_absoluteX="161dp"
-            tools:layout_editor_absoluteY="340dp" />
+            android:layout_marginTop="32dp"
+            android:text="TextView"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.724"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AlarmTime" />
 </androidx.constraintlayout.widget.ConstraintLayout>

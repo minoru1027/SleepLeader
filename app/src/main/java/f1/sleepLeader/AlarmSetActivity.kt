@@ -48,6 +48,14 @@ class AlarmSetActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        timePicker.setOnClickListener {
+            val newFragment = TimePickerFragment()
+            newFragment.show(supportFragmentManager, "Time Picker")
+
+        }
+
+
+
         musicFlag.setOnClickListener{
             if(musicFlag.isChecked === true) {
                 musicSpinner.visibility = View.VISIBLE
@@ -70,18 +78,19 @@ class AlarmSetActivity : AppCompatActivity() {
             }
         }
         AlarmSetting.setOnClickListener {
+
             var calendar: Calendar = Calendar.getInstance()
+            var calendarNow : Calendar = Calendar.getInstance()
+
             realm.executeTransaction {
                 var maxId = realm.where<AlarmTable>().max("alarmId")
                 var nextId = (maxId?.toLong() ?: 0L) + 1
                 var alarm = realm.createObject<AlarmTable>(nextId)
 
                 //設定した時間
-                var h = SetTime.text.toString()
-                var m = SetMinute.text.toString()
-                var hour = Integer.parseInt(h)
-                var min = Integer.parseInt(m)
-                var time = "%1$02d:%2$02d".format(hour, min)
+                var time = timePicker.text.toString()
+
+
 
                 intent.putExtra("setTime", time)
                 alarm.timer = time
@@ -92,11 +101,21 @@ class AlarmSetActivity : AppCompatActivity() {
 
                 //音楽の再生設定
                 var music = musicFlag.isChecked.toString()
+                println(music)
                 alarm.musicFlag = music
 
                 //音楽のファイルパス
                 alarm.musicPath = musicPath
 
+                calendar.time = time?.toDate()
+                calendarNow.time = getNow()
+
+                if(calendar.timeInMillis < calendarNow.timeInMillis){
+                    calendar.add(Calendar.DAY_OF_MONTH+1,1)
+                }
+                var timeMill = calendar.timeInMillis - calendarNow.timeInMillis
+                calendar.timeInMillis = timeMill
+                println(calendar.timeInMillis)
                 if (SetTime.length() != 0 && SetMinute.length() != 0){
                     val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
 
@@ -186,7 +205,15 @@ class AlarmSetActivity : AppCompatActivity() {
         return sec
 
     }
+    private fun getNow() : Date?{
+        val calendarNow = Calendar.getInstance()
+        val hour  = calendarNow.get(Calendar.HOUR_OF_DAY).toString()
+        var minute = calendarNow.get(Calendar.MINUTE).toString()
+        val timeNow = hour+":"+minute
+        val timerNow = timeNow.toDate()
 
+        return timerNow
+    }
     private fun String.toDate(time : String = "HH:mm") : Date?{
         val sdTimer = try{
             SimpleDateFormat(time)
