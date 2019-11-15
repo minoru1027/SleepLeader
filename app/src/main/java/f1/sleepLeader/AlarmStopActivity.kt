@@ -291,10 +291,8 @@ class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
                         startActivity(intent)
 
                     }*/
-
-
-
-           // }
+                }
+            }
         }
 /*            Return.setOnClickListener{ <-戻るボタンを押したときの処理です
                 if(activityFlag.equals("9")){

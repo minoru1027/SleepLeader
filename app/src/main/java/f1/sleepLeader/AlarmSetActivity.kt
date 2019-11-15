@@ -45,6 +45,14 @@ class AlarmSetActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        timePicker.setOnClickListener {
+            val newFragment = TimePickerFragment()
+            newFragment.show(supportFragmentManager, "Time Picker")
+
+        }
+
+
+
         musicFlag.setOnClickListener{
             if(musicFlag.isChecked === true) {
                 musicSpinner.visibility = View.VISIBLE
@@ -67,18 +75,17 @@ class AlarmSetActivity : AppCompatActivity() {
             }
         }
         AlarmSetting.setOnClickListener {
+
             var calendar: Calendar = Calendar.getInstance()
+            var calendarNow : Calendar = Calendar.getInstance()
+
             realm.executeTransaction {
                 var maxId = realm.where<AlarmTable>().max("alarmId")
                 var nextId = (maxId?.toLong() ?: 0L) + 1
                 var alarm = realm.createObject<AlarmTable>(nextId)
 
                 //設定した時間
-                var h = SetTime.text.toString()
-                var m = SetMinute.text.toString()
-                var hour = Integer.parseInt(h)
-                var min = Integer.parseInt(m)
-                var time = "%1$02d:%2$02d".format(hour, min)
+                var time = timePicker.text.toString()
 
 
 
@@ -99,9 +106,15 @@ class AlarmSetActivity : AppCompatActivity() {
                 alarm.musicPath = musicPath
 
 
-                var sec = setSecond()
+                calendar.time = time?.toDate()
+                calendarNow.time = getNow()
 
-                calendar.add(Calendar.SECOND, sec)
+                if(calendar.timeInMillis < calendarNow.timeInMillis){
+                    calendar.add(Calendar.DAY_OF_MONTH+1,1)
+                }
+                var timeMill = calendar.timeInMillis - calendarNow.timeInMillis
+                calendar.timeInMillis = timeMill
+                println(calendar.timeInMillis)
 
                 val alarmIntent = Intent(this, AlarmReceiver::class.java)
                 val pendingIntent = PendingIntent.getBroadcast(
@@ -125,56 +138,17 @@ class AlarmSetActivity : AppCompatActivity() {
             }
         }
     }
-    private fun setHour(): Int {
 
-        val calender: Calendar = Calendar.getInstance()
-        var hourNow = calender.get(Calendar.HOUR_OF_DAY)
+    private fun getNow() : Date?{
+        val calendarNow = Calendar.getInstance()
+        val hour  = calendarNow.get(Calendar.HOUR_OF_DAY).toString()
+        var minute = calendarNow.get(Calendar.MINUTE).toString()
+        val timeNow = hour+":"+minute
+        val timerNow = timeNow.toDate()
 
-        var hourSet = SetTime.text.toString().toInt()
-        var diffHour = hourSet - hourNow
-
-        if (diffHour < 0) {
-            diffHour *= -1
-
-            diffHour -= 24
-
-        }else if (diffHour > 0){
-            diffHour *= 1
-        }
-
-        return diffHour
+        return timerNow
     }
 
-    private fun setMinute(): Int {
-
-        val calender: Calendar = Calendar.getInstance()
-        var minNow = calender.get(Calendar.MINUTE)
-
-        var minSet = SetMinute.text.toString().toInt()
-        var diffMin = minSet - minNow
-
-        if (diffMin < 0) {
-            diffMin *= -1
-
-            diffMin -= 60
-        }
-
-        return diffMin
-    }
-
-    private fun setSecond(): Int{
-        val calendar: Calendar = Calendar.getInstance()
-        var secNow = calendar.get(Calendar.SECOND)
-
-        var transHour = setHour() * 60 * 60
-        var transMinute = setMinute() * 60
-        var secSet = transHour + transMinute
-
-        var sec = secSet - secNow
-
-        return sec
-
-    }
     private fun String.toDate(time : String = "HH:mm") : Date?{
         val sdTimer = try{
             SimpleDateFormat(time)
