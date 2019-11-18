@@ -149,6 +149,7 @@ class AlarmSetActivity : AppCompatActivity() {
 
                             var activity = requestCodeSet
                             intent.putExtra("activityFlag", "0")
+                            intent.putExtra("setTime",alarm.timer)
                             intent.putExtra("musicFlag",alarm.musicFlag)
                             intent.putExtra("musicPath",alarm.musicPath)
                             intent.putExtra("snoozeFlag",alarm.snoozeFlag)

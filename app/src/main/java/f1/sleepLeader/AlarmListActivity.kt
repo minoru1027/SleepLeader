@@ -26,6 +26,7 @@ class AlarmListActivity : AppCompatActivity() {
     private lateinit var realm : Realm
     private var timerList : HashMap<Long,String> = hashMapOf()
     private lateinit  var calendar : Calendar
+    private lateinit var calendarSet: Calendar
     private lateinit var timer :String
     private var requestCodeList = 200
     private lateinit var snoozeFlag:String
@@ -63,8 +64,16 @@ class AlarmListActivity : AppCompatActivity() {
         alarmStopButtom.setOnClickListener{
             val calendar = Calendar.getInstance()
             val calendarNow = Calendar.getInstance()
+            calendarSet = Calendar.getInstance()
+            var year = calendarSet.get(Calendar.YEAR)
+            var month = calendarSet.get(Calendar.MONTH)
+            var date = calendarSet.get(Calendar.DATE)
+            calendarSet.set(Calendar.YEAR,year)
+            calendarSet.set(Calendar.MONTH,month)
+            calendarSet.set(Calendar.DATE,date)
             val timeNow= getNow()
             calendarNow.time = timeNow
+
 
             for((key,value) in timerList){
                 val timeSet = timerList.get(key)?.toDate()
@@ -72,11 +81,12 @@ class AlarmListActivity : AppCompatActivity() {
                 if(calendar.timeInMillis < calendarNow.timeInMillis){
                     calendar.add(Calendar.DAY_OF_MONTH+1,1)
                 }
-                var timeMill = calendar.timeInMillis - calendarNow.timeInMillis
-                calendar.timeInMillis = timeMill
+                var timeMill = (calendar.timeInMillis - calendarNow.timeInMillis).toInt()/1000
 
-                setAlarmManager(calendar)
-                time.add(calendar)
+                calendarSet.set(Calendar.SECOND,timeMill)
+
+                setAlarmManager(calendarSet)
+                time.add(calendarSet)
             }
             startActivity<AlarmStopActivity>("timerList" to timerList,"activityFlag" to "1")
         }
