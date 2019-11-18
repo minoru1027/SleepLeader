@@ -29,7 +29,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.math.max
 
-class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
+class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
 
     private lateinit var realm : Realm
     private lateinit var snoozeFlag : String
@@ -37,7 +37,6 @@ class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
     private var activityFlag = ""
     private var musicPath = ""
     private var timerList : HashMap<Long,String> = hashMapOf()
-    private var mediaPlayer = MediaPlayer()
     private var timeList  : ArrayList<String> = arrayListOf()
     private var calendarList : ArrayList<Long> = arrayListOf()
     private var timeCount : Int = 0
@@ -193,7 +192,7 @@ class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
         val res = this.resources
         var soundId = res.getIdentifier(musicPath,"raw",this.packageName)
         mediaPlayer = MediaPlayer.create(this,soundId)
-        mediaPlayer.start()
+        mpStart()
     }
 
     override fun onResume() {
@@ -211,7 +210,7 @@ class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
             switch2.setOnCheckedChangeListener {_,isChecked: Boolean ->
 
                 if (isChecked) {
-                    onStop()
+                    mpStop()
                     if(snoozeFlag.equals("true")){
                         onSetSnooze()
                         snoozeFlag = "false"

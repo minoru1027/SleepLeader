@@ -135,7 +135,7 @@ class AlarmSetActivity : AppCompatActivity() {
                             //var sec = setSecond()
                             //calendar.add(Calendar.SECOND, sec)
 
-                            val alarmIntent = Intent(this, AlarmReceiver::class.java)
+                            val alarmIntent = Intent(this, AlarmBroadcastReceiver::class.java)
                             val pendingIntent = PendingIntent.getBroadcast(
                                 this,
                                 requestCodeSet,
@@ -143,7 +143,7 @@ class AlarmSetActivity : AppCompatActivity() {
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
                             val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                            manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+                            manager.setExact(AlarmManager.RTC_WAKEUP, calendarSet.timeInMillis, pendingIntent)
 
                             val intent = Intent(applicationContext, AlarmStopActivity::class.java)
 
