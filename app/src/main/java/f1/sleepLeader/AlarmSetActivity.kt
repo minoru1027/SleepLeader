@@ -18,7 +18,9 @@ import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_alarm_set.*
 import kotlinx.android.synthetic.main.activity_main.view.*
+import org.jetbrains.anko.startActivity
 import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.lang.invoke.MutableCallSite
 import java.lang.reflect.Array.get
 import java.text.ParseException
@@ -78,88 +80,103 @@ class AlarmSetActivity : AppCompatActivity() {
             }
         }
         AlarmSetting.setOnClickListener {
+            try{
+                var calendar: Calendar = Calendar.getInstance()
+                var calendarNow : Calendar = Calendar.getInstance()
 
-            var calendar: Calendar = Calendar.getInstance()
-            var calendarNow : Calendar = Calendar.getInstance()
+                realm.executeTransaction {
+                    var maxId = realm.where<AlarmTable>().max("alarmId")
+                    var nextId = (maxId?.toLong() ?: 0L) + 1
+                    var alarm = realm.createObject<AlarmTable>(nextId)
 
-            realm.executeTransaction {
-                var maxId = realm.where<AlarmTable>().max("alarmId")
-                var nextId = (maxId?.toLong() ?: 0L) + 1
-                var alarm = realm.createObject<AlarmTable>(nextId)
-
-                //設定した時間
-                var time = timePicker.text.toString()
+                    //設定した時間
+                    var time = timePicker.text.toString()
 
 
 
-                intent.putExtra("setTime", time)
-                alarm.timer = time
+                    intent.putExtra("setTime", time)
+                    alarm.timer = time
 
-                //スヌーズ設定
-                var snooze = snoozeFlag.isChecked.toString()
-                alarm.snoozeFlag = snooze
+                    //スヌーズ設定
+                    var snooze = snoozeFlag.isChecked.toString()
+                    alarm.snoozeFlag = snooze
 
-                //音楽の再生設定
-                var music = musicFlag.isChecked.toString()
-                println(music)
-                alarm.musicFlag = music
+                    //音楽の再生設定
+                    var music = musicFlag.isChecked.toString()
+                    println(music)
+                    alarm.musicFlag = music
 
-                //音楽のファイルパス
-                alarm.musicPath = musicPath
+                    //音楽のファイルパス
+                    alarm.musicPath = musicPath
 
-                calendar.time = time?.toDate()
-                calendarNow.time = getNow()
+                    calendar.time = time?.toDate()
+                    calendarNow.time = getNow()
+                    val calendarSet = Calendar.getInstance()
+                    var year = calendarSet.get(Calendar.YEAR)
+                    var month = calendarSet.get(Calendar.MONTH)
+                    var date = calendarSet.get(Calendar.DATE)
+                    calendarSet.set(Calendar.YEAR,year)
+                    calendarSet.set(Calendar.MONTH,month)
+                    calendarSet.set(Calendar.DATE,date)
 
-                if(calendar.timeInMillis < calendarNow.timeInMillis){
-                    calendar.add(Calendar.DAY_OF_MONTH+1,1)
-                }
-                var timeMill = calendar.timeInMillis - calendarNow.timeInMillis
-                calendar.timeInMillis = timeMill
-                println(calendar.timeInMillis)
-                if (SetTime.length() != 0 && SetMinute.length() != 0){
-                    val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
-
-                    if(timer != null){
-                        var sec = setSecond()
-                        calendar.add(Calendar.SECOND, sec)
-
-                        val alarmIntent = Intent(this, AlarmReceiver::class.java)
-                        val pendingIntent = PendingIntent.getBroadcast(
-                            this,
-                            requestCodeSet,
-                            alarmIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT
-                        )
-                        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                        manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-
-                        val intent = Intent(applicationContext, AlarmStopActivity::class.java)
-
-                        var activity = requestCodeSet
-                        intent.putExtra("activityFlag", activity)
-                        intent.putExtra("musicFlag",alarm.musicFlag)
-                        intent.putExtra("musicPath",alarm.musicPath)
-                        incSetCode()
-                        startActivity(intent)
+                    if(calendar.timeInMillis < calendarNow.timeInMillis){
+                        calendar.add(Calendar.DAY_OF_MONTH+1,1)
                     }
-                }else{
-                    //エラー処理
-                    if (SetTime.length() == 0 && SetMinute.length() == 0){
-                        HourEmptyException()
-                        MiniteEmptyException()
 
-                    }else if(SetTime.length() == 0){
-                        HourEmptyException()
+                    var timeMill = (calendar.timeInMillis - calendarNow.timeInMillis).toInt()/1000
 
-                    }else if(SetMinute.length() == 0){
-                        MiniteEmptyException()
+                    calendarSet.set(Calendar.SECOND,timeMill)
 
+                    println(calendarSet.time)
+                    //if (SetTime.length() != 0 && SetMinute.length() != 0){
+                        val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
+
+                        if(timer != null){
+                            //var sec = setSecond()
+                            //calendar.add(Calendar.SECOND, sec)
+
+                            val alarmIntent = Intent(this, AlarmReceiver::class.java)
+                            val pendingIntent = PendingIntent.getBroadcast(
+                                this,
+                                requestCodeSet,
+                                alarmIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                            val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                            manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+
+                            val intent = Intent(applicationContext, AlarmStopActivity::class.java)
+
+                            var activity = requestCodeSet
+                            intent.putExtra("activityFlag", "0")
+                            intent.putExtra("musicFlag",alarm.musicFlag)
+                            intent.putExtra("musicPath",alarm.musicPath)
+                            intent.putExtra("snoozeFlag",alarm.snoozeFlag)
+
+                            //incSetCode()
+                            startActivity(intent)
+                        }
+                    //}else{
+                        //エラー処理
+                        /*if (SetTime.length() == 0 && SetMinute.length() == 0){
+                            HourEmptyException()
+                            MiniteEmptyException()
+
+                        }else if(SetTime.length() == 0){
+                            HourEmptyException()
+
+                        }else if(SetMinute.length() == 0){
+                            MiniteEmptyException()
+
+                        }*/
                     }
+                }catch (e:NullPointerException){
+                    Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
+                    startActivity<AlarmSetActivity>()
                 }
             }
         }
-    }
-    private fun setHour(): Int {
+    /*private fun setHour(): Int {
 
         val calender: Calendar = Calendar.getInstance()
         var hourNow = calender.get(Calendar.HOUR_OF_DAY)
@@ -204,7 +221,7 @@ class AlarmSetActivity : AppCompatActivity() {
 
         return sec
 
-    }
+    }*/
     private fun getNow() : Date?{
         val calendarNow = Calendar.getInstance()
         val hour  = calendarNow.get(Calendar.HOUR_OF_DAY).toString()
@@ -235,7 +252,7 @@ class AlarmSetActivity : AppCompatActivity() {
         return timer
     }
 
-    open fun stopAlarmSet(){
+    /*open fun stopAlarmSet(){
         val alarmIntent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             this,
@@ -260,5 +277,5 @@ class AlarmSetActivity : AppCompatActivity() {
     private fun MiniteEmptyException(){
         Toast.makeText(applicationContext, "分が入力されていません", Toast.LENGTH_LONG).show()
 
-    }
+    }*/
 }
