@@ -10,8 +10,8 @@
 
     <Button
             android:id="@+id/AlarmSetting"
-            android:layout_width="177dp"
-            android:layout_height="68dp"
+            android:layout_width="272dp"
+            android:layout_height="53dp"
             android:layout_marginTop="128dp"
             android:background="@drawable/radius"
             android:text="設定"
@@ -25,12 +25,12 @@
             android:id="@+id/musicFlag"
             android:layout_width="200dp"
             android:layout_height="49dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="24dp"
             android:text="musiclock"
             android:textColor="#fffaf0"
             android:textColorHint="#fffaf0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.677"
+            app:layout_constraintHorizontal_bias="0.72"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/snoozeFlag" />
 
@@ -51,12 +51,12 @@
             android:id="@+id/snoozeFlag"
             android:layout_width="200dp"
             android:layout_height="53dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="52dp"
             android:text="スヌーズ"
             android:textColor="#fffaf0"
             android:textColorHint="#fffaf0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.675"
+            app:layout_constraintHorizontal_bias="0.72"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timePicker" />
 
