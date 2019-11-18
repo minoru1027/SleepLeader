@@ -81,95 +81,36 @@ class AlarmSetActivity : AppCompatActivity() {
         }
         AlarmSetting.setOnClickListener {
             try{
-                var calendar: Calendar = Calendar.getInstance()
-                var calendarNow : Calendar = Calendar.getInstance()
-
                 realm.executeTransaction {
-                    var maxId = realm.where<AlarmTable>().max("alarmId")
-                    var nextId = (maxId?.toLong() ?: 0L) + 1
-                    var alarm = realm.createObject<AlarmTable>(nextId)
+                        var maxId = realm.where<AlarmTable>().max("alarmId")
+                        var nextId = (maxId?.toLong() ?: 0L) + 1
+                        var alarm = realm.createObject<AlarmTable>(nextId)
 
-                    //設定した時間
-                    var time = timePicker.text.toString()
+                        //設定した時間
+                        var time = timePicker.text.toString()
 
+                        intent.putExtra("setTime", time)
+                        alarm.timer = time
 
+                        //スヌーズ設定
+                        var snooze = snoozeFlag.isChecked.toString()
+                        alarm.snoozeFlag = snooze
 
-                    intent.putExtra("setTime", time)
-                    alarm.timer = time
+                        //音楽の再生設定
+                        var music = musicFlag.isChecked.toString()
+                        println(music)
+                        alarm.musicFlag = music
 
-                    //スヌーズ設定
-                    var snooze = snoozeFlag.isChecked.toString()
-                    alarm.snoozeFlag = snooze
-
-                    //音楽の再生設定
-                    var music = musicFlag.isChecked.toString()
-                    println(music)
-                    alarm.musicFlag = music
-
-                    //音楽のファイルパス
-                    alarm.musicPath = musicPath
-
-                    calendar.time = time?.toDate()
-                    calendarNow.time = getNow()
-                    val calendarSet = Calendar.getInstance()
-                    var year = calendarSet.get(Calendar.YEAR)
-                    var month = calendarSet.get(Calendar.MONTH)
-                    var date = calendarSet.get(Calendar.DATE)
-                    calendarSet.set(Calendar.YEAR,year)
-                    calendarSet.set(Calendar.MONTH,month)
-                    calendarSet.set(Calendar.DATE,date)
-
-                    if(calendar.timeInMillis < calendarNow.timeInMillis){
-                        calendar.add(Calendar.DAY_OF_MONTH+1,1)
-                    }
-
-                    var timeMill = (calendar.timeInMillis - calendarNow.timeInMillis).toInt()/1000
-
-                    calendarSet.set(Calendar.SECOND,timeMill)
-
-                    println(calendarSet.time)
-                    //if (SetTime.length() != 0 && SetMinute.length() != 0){
+                        //音楽のファイルパス
+                        alarm.musicPath = musicPath
                         val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
-
-                        if(timer != null){
-                            //var sec = setSecond()
-                            //calendar.add(Calendar.SECOND, sec)
-
-                            val alarmIntent = Intent(this, AlarmBroadcastReceiver::class.java)
-                            val pendingIntent = PendingIntent.getBroadcast(
-                                this,
-                                requestCodeSet,
-                                alarmIntent,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-                            val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                            manager.setExact(AlarmManager.RTC_WAKEUP, calendarSet.timeInMillis, pendingIntent)
-
-                            val intent = Intent(applicationContext, AlarmStopActivity::class.java)
-
-                            var activity = requestCodeSet
-                            intent.putExtra("activityFlag", "0")
-                            intent.putExtra("setTime",alarm.timer)
-                            intent.putExtra("musicFlag",alarm.musicFlag)
-                            intent.putExtra("musicPath",alarm.musicPath)
-                            intent.putExtra("snoozeFlag",alarm.snoozeFlag)
-
-                            //incSetCode()
-                            startActivity(intent)
-                        }
-                    //}else{
-                        //エラー処理
-                        /*if (SetTime.length() == 0 && SetMinute.length() == 0){
-                            HourEmptyException()
-                            MiniteEmptyException()
-
-                        }else if(SetTime.length() == 0){
-                            HourEmptyException()
-
-                        }else if(SetMinute.length() == 0){
-                            MiniteEmptyException()
-
-                        }*/
+                        val intent = Intent(applicationContext, AlarmStopActivity::class.java)
+                        intent.putExtra("activityFlag", "0")
+                        intent.putExtra("setTime",alarm.timer)
+                        intent.putExtra("musicFlag",alarm.musicFlag)
+                        intent.putExtra("musicPath",alarm.musicPath)
+                        intent.putExtra("snoozeFlag",alarm.snoozeFlag)
+                        startActivity(intent)
                     }
                 }catch (e:NullPointerException){
                     Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
@@ -177,61 +118,6 @@ class AlarmSetActivity : AppCompatActivity() {
                 }
             }
         }
-    /*private fun setHour(): Int {
-
-        val calender: Calendar = Calendar.getInstance()
-        var hourNow = calender.get(Calendar.HOUR_OF_DAY)
-        var hourSet = SetTime.text.toString().toInt()
-        var diffHour = hourSet - hourNow
-
-            if (diffHour < 0) {
-                diffHour *= -1
-                diffHour -= 24
-
-            } else if (diffHour > 0) {
-                diffHour *= 1
-
-            }
-
-        return diffHour
-    }
-
-    private fun setMinute(): Int {
-
-        val calender: Calendar = Calendar.getInstance()
-        var minNow = calender.get(Calendar.MINUTE)
-        var minSet = SetMinute.text.toString().toInt()
-        var diffMin = minSet - minNow
-
-            if (diffMin < 0) {
-                diffMin *= -1
-                diffMin -= 60
-
-            }
-
-            return diffMin
-    }
-
-    private fun setSecond(): Int{
-        val calendar: Calendar = Calendar.getInstance()
-        var secNow = calendar.get(Calendar.SECOND)
-        var transHour = setHour() * 60 * 60
-        var transMinute = setMinute() * 60
-        var secSet = transHour + transMinute
-        var sec = secSet - secNow
-
-        return sec
-
-    }*/
-    private fun getNow() : Date?{
-        val calendarNow = Calendar.getInstance()
-        val hour  = calendarNow.get(Calendar.HOUR_OF_DAY).toString()
-        var minute = calendarNow.get(Calendar.MINUTE).toString()
-        val timeNow = hour+":"+minute
-        val timerNow = timeNow.toDate()
-
-        return timerNow
-    }
     private fun String.toDate(time : String = "HH:mm") : Date?{
         val sdTimer = try{
             SimpleDateFormat(time)
@@ -252,31 +138,4 @@ class AlarmSetActivity : AppCompatActivity() {
         }
         return timer
     }
-
-    /*open fun stopAlarmSet(){
-        val alarmIntent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            this,
-            requestCodeSet,
-            alarmIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        manager.cancel(pendingIntent)
-
-    }
-
-    open fun incSetCode(){
-        //アラームセットのリクエストコードの値を1個増やすよー
-        requestCodeSet +=1
-    }
-
-    private fun HourEmptyException(){
-        Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
-
-    }
-    private fun MiniteEmptyException(){
-        Toast.makeText(applicationContext, "分が入力されていません", Toast.LENGTH_LONG).show()
-
-    }*/
 }
