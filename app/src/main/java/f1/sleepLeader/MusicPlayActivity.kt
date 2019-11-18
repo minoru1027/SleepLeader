@@ -19,7 +19,7 @@ class MusicPlayActivity :MediaPlayerActivity(){
         val musicAlarmPath = MusicAlarmRandom()
         var soundId = res.getIdentifier(musicAlarmPath,"raw",context.packageName)
         mediaPlayer = MediaPlayer.create(context,soundId)
-        mpStart()
+        mpStart(context)
     }
 
     private fun MusicAlarmRandom() : String{
@@ -47,6 +47,7 @@ class MusicPlayActivity :MediaPlayerActivity(){
     override fun onDestroy() {
         super.onDestroy()
         try {
+            alarmRealm.close()
         }catch (e:IllegalStateException){
             println(e)
         }

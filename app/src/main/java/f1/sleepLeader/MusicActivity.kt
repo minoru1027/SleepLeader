@@ -10,7 +10,7 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_music.*
 import java.lang.RuntimeException
 
-class MusicActivity : AppCompatActivity() {
+class MusicActivity : MediaPlayerActivity(){
 
     private lateinit var player: MediaPlayer
     private lateinit var musicRealm: Realm
@@ -39,16 +39,14 @@ class MusicActivity : AppCompatActivity() {
                 val res = this.resources
                 var soundId = res.getIdentifier(musicListPosition.musicPath,"raw",this.packageName)
                 if(musicFlag == true){
-                player.stop()
-                player.reset()
-                player.release()
+                mpStop()
                 musicFlag = false
             }
             if(soundId === sId){
                 sId = 0
             }else {
-                player = MediaPlayer.create(this, soundId)
-                player.start()
+                mediaPlayer = MediaPlayer.create(this, soundId)
+                mpStart()
                 musicFlag = true
                 sId = soundId
             }
@@ -58,16 +56,14 @@ class MusicActivity : AppCompatActivity() {
             val res = this.resources
             var soundId = res.getIdentifier(musicAlarmListPosition.musicAlarmPath,"raw",this.packageName)
             if(musicFlag == true){
-                player.stop()
-                player.reset()
-                player.release()
+                mpStop()
                 musicFlag = false
             }
             if(soundId === sId){
                 sId = 0
             }else {
-                player = MediaPlayer.create(this, soundId)
-                player.start()
+                mediaPlayer = MediaPlayer.create(this, soundId)
+                mpStart()
                 musicFlag = true
                 sId = soundId
             }
@@ -77,9 +73,7 @@ class MusicActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         try {
-            player.stop()
-            player.reset()
-            player.release()
+            mpStop()
             musicFlag = false
         }catch (e : IllegalStateException){
             println(e)
@@ -90,9 +84,9 @@ class MusicActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            player.stop()
-            player.reset()
-            player.release()
+            mpStop()
+            musicRealm.close()
+            musicAlarmRealm.close()
             musicFlag = false
         }catch(e : java.lang.IllegalStateException){
             println(e)

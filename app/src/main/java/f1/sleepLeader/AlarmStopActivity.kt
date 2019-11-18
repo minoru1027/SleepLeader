@@ -1,6 +1,7 @@
 package f1.sleepLeader
 
 
+import android.annotation.TargetApi
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -11,23 +12,18 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.media.MediaPlayer
+import android.os.Build
 import android.view.View
-import android.widget.Switch
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_alarm_stop.*
-import org.jetbrains.anko.act
 import org.jetbrains.anko.startActivity
 import java.lang.IllegalArgumentException
-import java.lang.reflect.Array.get
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlin.math.max
 
 class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
 
@@ -43,7 +39,11 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
     private var calendar : Calendar = Calendar.getInstance()
     private var sortTime : String = ""
     private var sortCalendar : Long = 0
-
+    private var calendarSet : Calendar = Calendar.getInstance()
+    private var calendarNow : Calendar = Calendar.getInstance()
+    var year = calendarSet.get(Calendar.YEAR)
+    var month = calendarSet.get(Calendar.MONTH)
+    var date = calendarSet.get(Calendar.DATE)
 
     //シェイク機能の初期設定
     private var beforeX: Float = 0f
@@ -54,6 +54,272 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
     private val shakeSpeed = 80f  // 振ってると判断するスピード
     private var shakeCount = 0f   // 振ってると判断した回数
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_alarm_stop)
+        realm = Realm.getDefaultInstance()
+
+        nextTimer.visibility = View.GONE
+
+        activityFlag = intent.getStringExtra("activityFlag")
+
+        //AlarmSetActivityか、AlarmListActivityのどっちの遷移かを判定
+        if(activityFlag.equals("0")){
+            val setTime = intent.getStringExtra("setTime")
+            snoozeFlag = intent.getStringExtra("snoozeFlag")
+            musicFlag = intent.getStringExtra("musicFlag")
+            if(musicFlag.equals("true")) {
+                musicPath = intent.getStringExtra("musicPath")
+            }
+
+            val time = setTime?.toDate()
+
+            setTimer(time)
+
+            AlarmTime.text = setTime
+
+        }else if(activityFlag.equals("1")){
+            timerList = intent?.getSerializableExtra("timerList") as HashMap<Long, String>
+            for((key,value) in timerList){
+                var time = timerList.get(key).toString()
+                calendar.time = time?.toDate()
+                timeList.add(time)
+                calendarList.add(calendar.timeInMillis)
+            }
+
+            if(timeCount+1 === timeList.size){
+                AlarmTime.text = timeList[timeCount]
+            }else{
+                nextTimer.visibility = View.VISIBLE
+
+                //TimeListを昇順に書き換え
+                for(i in 1..timeList.size-1 step 1){
+                    for(j in i..timeList.size-1 step 1){
+                        if(calendarList[i-1] > calendarList[j]){
+                            sortTime = timeList[i-1]
+                            sortCalendar = calendarList[i-1]
+                            timeList[i-1] = timeList[j]
+                            calendarList[i-1] = calendarList[j]
+                            timeList[j] = sortTime
+                            calendarList[j] = sortCalendar
+                        }
+                    }
+                }
+
+                AlarmTime.text = timeList[timeCount]
+                timeCount++
+                nextTimer.text = timeList[timeCount]
+
+            }
+            val timer = AlarmTime.text.toString()
+
+            setTimer(timer?.toDate())
+
+            val timeSet = realm.where<AlarmTable>().equalTo("timer",timer).findFirst()
+
+            snoozeFlag = timeSet?.snoozeFlag.toString()
+            musicFlag = timeSet?.musicFlag.toString()
+            if(musicFlag.equals("true")) {
+                musicPath = timeSet?.musicPath.toString()
+            }
+        }
+        if(musicFlag.equals("false")){
+            musicPath = MusicRandom()
+        }
+        val res = this.resources
+        var soundId = res.getIdentifier(musicPath,"raw",this.packageName)
+        mediaPlayer = MediaPlayer.create(this,soundId)
+        mpStart()
+    }
+    override fun onResume() {
+        super.onResume()
+
+        val sensorManager = this.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val accSensor = sensorManager.getDefaultSensor(
+            Sensor.TYPE_ACCELEROMETER
+        )
+        sensorManager.registerListener(
+            this, accSensor,
+            SensorManager.SENSOR_DELAY_GAME
+        )
+
+        //setList.forEach {
+        //アラームを止めた後の処理
+        switch2.setOnCheckedChangeListener { _, isChecked: Boolean ->
+
+            if (isChecked) {
+                mpStop()
+                if (snoozeFlag.equals("true")) {
+                    onSetSnooze()
+                    snoozeFlag = "false"
+                } else if (snoozeFlag.equals("false") && activityFlag.equals("0")) {
+                    startActivity<AlarmActivity>()
+                } else if (snoozeFlag.equals("false") && activityFlag.equals("1")) {
+                    if (timeCount + 1 > timeList.size) {
+                        startActivity<AlarmActivity>()
+                    } else if (timeCount + 1 === timeList.size) {
+                        nextTimer.visibility = View.GONE
+
+                        AlarmTime.text = timeList[timeCount]
+
+                        setTimer(timeList[timeCount]?.toDate())
+
+                        val timeSet =
+                            realm.where<AlarmTable>().equalTo("timer", timeList[timeCount])
+                                .findFirst()
+
+                        snoozeFlag = timeSet?.snoozeFlag.toString()
+
+                        timeCount++
+
+
+                    } else {
+
+                        setTimer(timeList[timeCount]?.toDate())
+
+                        AlarmTime.text = timeList[timeCount]
+                        timeCount++
+                        nextTimer.text = timeList[timeCount]
+
+                        val timeSet =
+                            realm.where<AlarmTable>().equalTo("timer", timeList[timeCount])
+                                .findFirst()
+
+                        snoozeFlag = timeSet?.snoozeFlag.toString()
+
+                    }
+                }
+                Thread.sleep(100)
+                switch2.setChecked(false)
+            } else if (!isChecked) {
+            }
+        }
+    }
+
+
+    private fun setTimer(time : Date?){
+        calendarNow.time = getNow()
+        calendar.time = time
+        calendarSet.set(Calendar.YEAR,year)
+        calendarSet.set(Calendar.MONTH,month)
+        calendarSet.set(Calendar.DATE,date)
+
+        if(calendar.timeInMillis < calendarNow.timeInMillis){
+            calendar.add(Calendar.DAY_OF_MONTH+1,1)
+        }
+
+        var timeMill = (calendar.timeInMillis - calendarNow.timeInMillis).toInt()/1000
+
+        calendarSet.set(Calendar.SECOND,timeMill)
+        setAlarmManager(calendarSet)
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun setAlarmManager(calendar: Calendar){
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this,AlarmBroadcastReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        when{
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ->{
+                val info = AlarmManager.AlarmClockInfo(
+                    calendar.timeInMillis,null)
+                alarmManager.setAlarmClock(info, pendingIntent)
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ->{
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis, pendingIntent)
+            }
+            else ->{
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis,null)
+            }
+
+        }
+    }
+    private fun onSetSnooze(){
+        var calendar: Calendar = Calendar.getInstance()
+        calendar.add(Calendar.MINUTE,5)
+
+        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+
+        println("スヌーズ機能")
+    }
+
+    private fun MusicRandom() : String{
+        var maxId = realm.where<MusicTable>().max("musicId")
+        var randomId = (maxId?.toInt() ?: 0)
+        println(randomId)
+        val random = Random()
+        var pathId = random.nextInt(randomId)
+        while(pathId < 1){
+            pathId = (maxId?.toInt() ?: 0)
+        }
+        val musicId = realm.where<MusicTable>().equalTo("musicId",pathId).findFirst()
+        val musicPath = musicId?.musicPath.toString()
+
+        return musicPath
+    }
+
+    private fun getNow() : Date?{
+        val calendarNow = Calendar.getInstance()
+        val hour  = calendarNow.get(Calendar.HOUR_OF_DAY).toString()
+        var minute = calendarNow.get(Calendar.MINUTE).toString()
+        val timeNow = hour+":"+minute
+        val timerNow = timeNow.toDate()
+
+        return timerNow
+    }
+
+    private fun String.toDate(time : String = "HH:mm") : Date?{
+        val sdTimer = try{
+            SimpleDateFormat(time)
+        }catch (e: IllegalArgumentException){
+            null
+        }
+
+        val timer = sdTimer?.let{
+            try{
+                it.parse(this)
+            }catch (e: ParseException){
+                null
+            }
+        }
+        return timer
+    }
+
+    //シェイク機能のメソッド
+    override fun onPause() {
+        super.onPause()
+        //センサーの終了
+        val sensorManager = this.getSystemService(Context.SENSOR_SERVICE)
+                as SensorManager
+        sensorManager.unregisterListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        try {
+            mpStart()
+        }catch (e:IllegalStateException){
+            println(e)
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            mpStop()
+           val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(this,AlarmBroadcastReceiver::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            alarmManager.cancel(pendingIntent)
+        }catch (e:IllegalStateException){
+            println(e)
+        }
+    }
     //シェイク機能のメソッド
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
@@ -99,13 +365,12 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
                         shakeCount = 0F
 
                         // シャッフル
-                        onStop()
+                        mpStop()
                         musicPath = MusicRandom()
                         val res = this.resources
                         var soundId = res.getIdentifier(musicPath,"raw",this.packageName)
                         mediaPlayer = MediaPlayer.create(this,soundId)
-                        mediaPlayer.start()
-
+                        mpStart()
                     }
                 } else {
                     // 途中でフリが収まった場合は、カウントを初期化
@@ -122,288 +387,5 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
         }
 
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alarm_stop)
-        realm = Realm.getDefaultInstance()
-
-        nextTimer.visibility = View.GONE
-
-        activityFlag = intent.getStringExtra("activityFlag")
-
-        //AlarmSetActivityか、AlarmListActivityのどっちの遷移かを判定
-        if(activityFlag.equals("0")){
-            val setTime = intent.getStringExtra("setTime")
-            snoozeFlag = intent.getStringExtra("snoozeFlag")
-            musicFlag = intent.getStringExtra("musicFlag")
-            if(musicFlag.equals("true")) {
-                musicPath = intent.getStringExtra("musicPath")
-            }
-
-            AlarmTime.text = setTime
-
-        }else if(activityFlag.equals("1")){
-            timerList = intent?.getSerializableExtra("timerList") as HashMap<Long, String>
-            for((key,value) in timerList){
-                var time = timerList.get(key).toString()
-                calendar.time = time?.toDate()
-                timeList.add(time)
-                calendarList.add(calendar.timeInMillis)
-            }
-
-            if(timeCount+1 === timeList.size){
-                AlarmTime.text = timeList[timeCount]
-            }else{
-                nextTimer.visibility = View.VISIBLE
-
-                //TimeListを昇順に書き換え
-                for(i in 1..timeList.size-1 step 1){
-                    for(j in i..timeList.size-1 step 1){
-                        if(calendarList[i-1] > calendarList[j]){
-                            sortTime = timeList[i-1]
-                            sortCalendar = calendarList[i-1]
-                            timeList[i-1] = timeList[j]
-                            calendarList[i-1] = calendarList[j]
-                            timeList[j] = sortTime
-                            calendarList[j] = sortCalendar
-                        }
-                    }
-                }
-
-                AlarmTime.text = timeList[timeCount]
-                timeCount++
-                nextTimer.text = timeList[timeCount]
-
-            }
-            val timer = AlarmTime.text.toString()
-
-            val timeSet = realm.where<AlarmTable>().equalTo("timer",timer).findFirst()
-
-            snoozeFlag = timeSet?.snoozeFlag.toString()
-            musicFlag = timeSet?.musicFlag.toString()
-            if(musicFlag.equals("true")) {
-                musicPath = timeSet?.musicPath.toString()
-            }
-        }
-        if(musicFlag.equals("false")){
-            musicPath = MusicRandom()
-        }
-        val res = this.resources
-        var soundId = res.getIdentifier(musicPath,"raw",this.packageName)
-        mediaPlayer = MediaPlayer.create(this,soundId)
-        mpStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val sensorManager = this.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        val accSensor = sensorManager.getDefaultSensor(
-            Sensor.TYPE_ACCELEROMETER)
-        sensorManager.registerListener(
-            this, accSensor,
-            SensorManager.SENSOR_DELAY_GAME)
-
-        //setList.forEach {
-            //アラームを止めた後の処理
-            switch2.setOnCheckedChangeListener {_,isChecked: Boolean ->
-
-                if (isChecked) {
-                    mpStop()
-                    if(snoozeFlag.equals("true")){
-                        onSetSnooze()
-                        snoozeFlag = "false"
-                        switch2.setChecked(false)
-                    }else if(snoozeFlag.equals("false") && activityFlag.equals("0")){
-                        startActivity<AlarmActivity>()
-                    }else if(snoozeFlag.equals("false") && activityFlag.equals("1")){
-                        if(timeCount+1 > timeList.size){
-                            startActivity<AlarmActivity>()
-                        }else if(timeCount+1 === timeList.size){
-                            nextTimer.visibility = View.GONE
-
-                            AlarmTime.text = timeList[timeCount]
-
-                            val timeSet = realm.where<AlarmTable>().equalTo("timer",timeList[timeCount]).findFirst()
-
-                            snoozeFlag = timeSet?.snoozeFlag.toString()
-
-                            timeCount++
-
-                            switch2.setChecked(false)
-                        }else{
-
-
-                            AlarmTime.text = timeList[timeCount]
-                            timeCount++
-                            nextTimer.text = timeList[timeCount]
-
-                            val timeSet = realm.where<AlarmTable>().equalTo("timer",timeList[timeCount]).findFirst()
-
-                            snoozeFlag = timeSet?.snoozeFlag.toString()
-
-                            switch2.setChecked(false)
-                        }
-                    }
-
-                }else if (!isChecked){
-                   /* if(snoozeFlag.equals("false") && activityFlag.equals("0")){
-                        startActivity<AlarmActivity>()
-                    }else if(snoozeFlag.equals("false") && activityFlag.equals("1")){
-                        if(timeCount+1 > timeList.size){
-                            startActivity<AlarmActivity>()
-                        }else if(timeCount+1 === timeList.size){
-                            nextTimer.visibility = View.GONE
-
-                            AlarmTime.text = timeList[timeCount]
-
-                            val timeSet = realm.where<AlarmTable>().equalTo("timer",timeList[timeCount]).findFirst()
-
-                            snoozeFlag = timeSet?.snoozeFlag.toString()
-
-                            timeCount++
-                        }else{
-
-                            AlarmTime.text = timeList[timeCount]
-                            timeCount++
-                            nextTimer.text = timeList[timeCount]
-
-                            val timeSet = realm.where<AlarmTable>().equalTo("timer",timeList[timeCount]).findFirst()
-
-                            snoozeFlag = timeSet?.snoozeFlag.toString()
-                        }
-                    }*/
-                }
-                    /*if (activityFlag.equals("9")) {
-                        AlarmTime.setText(getPara)
-
-                        val intent = Intent(applicationContext, AlarmActivity::class.java)
-                        startActivity(intent)
-
-                    } else if (activityFlag.equals("0") || activityFlag.equals("1") || activityFlag.equals("2") || activityFlag.equals("3") || activityFlag.equals("4")) {
-                        AlarmTime.setText(setList)
-
-                    } else {
-                        val intent = Intent(applicationContext, AlarmActivity::class.java)
-                        startActivity(intent)
-
-                    }*/
-                }
-/*            Return.setOnClickListener{ <-戻るボタンを押したときの処理です
-                if(activityFlag.equals("9")){
-                    alarmSetCancel()
-
-                    val intent = Intent(applicationContext, AlarmActivity::class.java)
-                    startActivity(intent)
-
-                }else{
-                    alarmListCancel()
-
-                    val intent = Intent(applicationContext, AlarmActivity::class.java)
-                    startActivity(intent)
-
-                }
-            }
-
-        Random.setOnClickListener{
-            if(){
-
-            }else{
-
-            }
-        }*/
-
-    }
-
-    private fun onSetSnooze(){
-        var calendar: Calendar = Calendar.getInstance()
-        calendar.add(Calendar.MINUTE,5)
-
-        val alarmIntent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-
-        println("スヌーズ機能")
-    }
-
-    private fun alarmSetCancel(){
-        val alarmSet = AlarmSetActivity()
-
-        /*alarmSet.stopAlarmSet()
-        alarmSet.incSetCode()*/
-    }
-
-    private fun alarmListCancel(){
-        val alarmList = AlarmListActivity()
-
-        alarmList.stopAlarmList()
-        alarmList.incListCode()
-    }
-
-    private fun MusicRandom() : String{
-        var maxId = realm.where<MusicTable>().max("musicId")
-        var randomId = (maxId?.toInt() ?: 0)
-        println(randomId)
-        val random = Random()
-        var pathId = random.nextInt(randomId)
-        while(pathId < 1){
-            pathId = (maxId?.toInt() ?: 0)
-        }
-        val musicId = realm.where<MusicTable>().equalTo("musicId",pathId).findFirst()
-        val musicPath = musicId?.musicPath.toString()
-
-        return musicPath
-    }
-
-    private fun String.toDate(time : String = "HH:mm") : Date?{
-        val sdTimer = try{
-            SimpleDateFormat(time)
-        }catch (e: IllegalArgumentException){
-            null
-        }
-
-        val timer = sdTimer?.let{
-            try{
-                it.parse(this)
-            }catch (e: ParseException){
-                null
-            }
-        }
-        return timer
-    }
-
-    //シェイク機能のメソッド
-    override fun onPause() {
-        super.onPause()
-        //センサーの終了
-        val sensorManager = this.getSystemService(Context.SENSOR_SERVICE)
-                as SensorManager
-        sensorManager.unregisterListener(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        try {
-            mediaPlayer.stop()
-            mediaPlayer.reset()
-            mediaPlayer.release()
-        }catch (e:IllegalStateException){
-            println(e)
-        }
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        try {
-            mediaPlayer.stop()
-            mediaPlayer.reset()
-            mediaPlayer.release()
-        }catch (e:IllegalStateException){
-            println(e)
-        }
-    }
-
 }
 

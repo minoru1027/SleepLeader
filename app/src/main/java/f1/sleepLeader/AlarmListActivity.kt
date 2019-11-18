@@ -62,56 +62,7 @@ class AlarmListActivity : AppCompatActivity() {
         }
 
         alarmStopButtom.setOnClickListener{
-            val calendar = Calendar.getInstance()
-            val calendarNow = Calendar.getInstance()
-            calendarSet = Calendar.getInstance()
-            var year = calendarSet.get(Calendar.YEAR)
-            var month = calendarSet.get(Calendar.MONTH)
-            var date = calendarSet.get(Calendar.DATE)
-            calendarSet.set(Calendar.YEAR,year)
-            calendarSet.set(Calendar.MONTH,month)
-            calendarSet.set(Calendar.DATE,date)
-            val timeNow= getNow()
-            calendarNow.time = timeNow
-
-
-            for((key,value) in timerList){
-                val timeSet = timerList.get(key)?.toDate()
-                calendar.time = timeSet
-                if(calendar.timeInMillis < calendarNow.timeInMillis){
-                    calendar.add(Calendar.DAY_OF_MONTH+1,1)
-                }
-                var timeMill = (calendar.timeInMillis - calendarNow.timeInMillis).toInt()/1000
-
-                calendarSet.set(Calendar.SECOND,timeMill)
-
-                setAlarmManager(calendarSet)
-                time.add(calendarSet)
-            }
             startActivity<AlarmStopActivity>("timerList" to timerList,"activityFlag" to "1")
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setAlarmManager(calendar: Calendar){
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this,AlarmBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, requestCodeList, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        when{
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ->{
-                val info = AlarmManager.AlarmClockInfo(
-                    calendar.timeInMillis,null)
-                alarmManager.setAlarmClock(info, pendingIntent)
-            }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ->{
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis, pendingIntent)
-            }
-            else ->{
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis,null)
-            }
-
         }
     }
 
@@ -179,31 +130,9 @@ class AlarmListActivity : AppCompatActivity() {
          return timer
      }
 
-     private fun getNow() : Date?{
-         val calendarNow = Calendar.getInstance()
-         val hour  = calendarNow.get(Calendar.HOUR_OF_DAY).toString()
-         var minute = calendarNow.get(Calendar.MINUTE).toString()
-         val timeNow = hour+":"+minute
-         val timerNow = timeNow.toDate()
-
-         return timerNow
-     }
-
      override fun onDestroy() {
          super.onDestroy()
          realm.close()
      }
 
-    open fun incListCode(){
-        //アラームリストのリクエストコードの値を1個増やすよー
-        requestCodeList +=1
-    }
-
-    open fun stopAlarmList(){
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = PendingIntent.getBroadcast(this, requestCodeList, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        alarmManager.cancel(pendingIntent)
-
-    }
 }
