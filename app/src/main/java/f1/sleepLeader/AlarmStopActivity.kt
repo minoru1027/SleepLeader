@@ -291,8 +291,6 @@ class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
 
                     }*/
                 }
-            }
-        }
 /*            Return.setOnClickListener{ <-戻るボタンを押したときの処理です
                 if(activityFlag.equals("9")){
                     alarmSetCancel()
@@ -335,8 +333,8 @@ class AlarmStopActivity : AppCompatActivity(),SensorEventListener{
     private fun alarmSetCancel(){
         val alarmSet = AlarmSetActivity()
 
-        alarmSet.stopAlarmSet()
-        alarmSet.incSetCode()
+        /*alarmSet.stopAlarmSet()
+        alarmSet.incSetCode()*/
     }
 
     private fun alarmListCancel(){
