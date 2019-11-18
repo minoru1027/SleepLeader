@@ -1,5 +1,7 @@
 package f1.sleepLeader
 
+
+import android.app.AlertDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
@@ -8,14 +10,14 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
-import org.w3c.dom.Text
+
 import java.util.*
 
 class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
     private lateinit var calendar:Calendar
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
         // Initialize a Calendar instance
         calendar = Calendar.getInstance()
 
@@ -24,11 +26,15 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
         val minute = calendar.get(Calendar.MINUTE)
         return TimePickerDialog(
             activity, // Context
-            android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth, // Theme
+            android.R.style.
+               Theme_Holo_Dialog_MinWidth,
+
+
             this, // TimePickerDialog.OnTimeSetListener
             hour, // Hour of day
             minute, // Minute
             false // Is 24 hour view
+
         )
     }
 
