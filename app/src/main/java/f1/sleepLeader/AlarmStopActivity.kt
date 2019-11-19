@@ -13,7 +13,9 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.media.MediaPlayer
 import android.os.Build
+import android.os.CountDownTimer
 import android.view.View
+import android.widget.Toast
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_alarm_stop.*
@@ -44,6 +46,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
     var year = calendarSet.get(Calendar.YEAR)
     var month = calendarSet.get(Calendar.MONTH)
     var date = calendarSet.get(Calendar.DATE)
+    private val dataFormat = SimpleDateFormat("mm:ss", Locale.JAPAN)
 
     //シェイク機能の初期設定
     private var beforeX: Float = 0f
@@ -236,19 +239,58 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
 
         }
     }
-    private fun onSetSnooze(){
-        var calendar: Calendar = Calendar.getInstance()
-        calendar.add(Calendar.MINUTE,5)
 
-        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+    private fun onSetSnooze(){
+        AlarmTime.setText(dataFormat.format(0))
+        nextTimer.visibility = View.GONE
+
+        var calendar: Calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR,year)
+        calendar.set(Calendar.MONTH,month)
+        calendar.set(Calendar.DATE,date)
+        calendar.add(Calendar.MINUTE,5)
+        //初期値じゃい
+        var cale :Calendar = Calendar.getInstance()
+        cale.set(Calendar.YEAR,year)
+        cale.set(Calendar.MONTH,month)
+        cale.set(Calendar.DATE,date)
+
+        var countNumber :Long = calendar.timeInMillis-cale.timeInMillis
+        println(calendar.time)
+        println(cale.time)
+        //表示するやつの更新頻度じゃい
+        val interval: Long = 10
+        //カウントダウンじゃい
+        var countDown = CountDown(countNumber, interval)
+        val alarmIntent = Intent(this, AlarmBroadcastReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
 
-        println("スヌーズ機能")
-    }
+        countDown.start()
 
+    }
+    internal inner class CountDown(millisInFuture: Long, countDownInterval: Long) :
+        CountDownTimer(millisInFuture, countDownInterval) {
+
+        override fun onFinish() {
+            // 完了
+
+            Toast.makeText(applicationContext, "(*´ω｀*)", Toast.LENGTH_LONG).show()
+        }
+
+        // インターバルで呼ばれる
+        override fun onTick(millisUntilFinished: Long) {
+            // 残り時間を分、秒、ミリ秒に分割
+            //long mm = millisUntilFinished / 1000 / 60;
+            //long ss = millisUntilFinished / 1000 % 60;
+            //long ms = millisUntilFinished - ss * 1000 - mm * 1000 * 60;
+            //timerText.setText(String.format("%1$02d:%2$02d.%3$03d", mm, ss, ms));
+
+            AlarmTime.setText(dataFormat.format(millisUntilFinished))
+        }
+    }
     private fun MusicRandom() : String{
         var maxId = realm.where<MusicTable>().max("musicId")
         var randomId = (maxId?.toInt() ?: 0)
