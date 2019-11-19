@@ -1,6 +1,7 @@
 package f1.sleepLeader
 
 //import android.support.v7.app.AppCompatActivity
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -63,6 +64,7 @@ class MusicActivity : MediaPlayerActivity(){
                 sId = 0
             }else {
                 mediaPlayer = MediaPlayer.create(this, soundId)
+                mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
                 mpStart()
                 musicFlag = true
                 sId = soundId
