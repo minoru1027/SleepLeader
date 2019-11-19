@@ -26,6 +26,7 @@ import java.lang.reflect.Array.get
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
 
 
@@ -33,7 +34,8 @@ class AlarmSetActivity : AppCompatActivity() {
 
     private lateinit var realm : Realm
     private var musicPath : String = ""
-    private var requestCodeSet = 100
+    private var alarmRealm : Realm = Realm.getDefaultInstance()
+    private var timeList : ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +45,14 @@ class AlarmSetActivity : AppCompatActivity() {
 
 
         val musicList = realm.where<MusicTable>().findAll()
+        val alarmList = alarmRealm.where<AlarmTable>().findAll()
+
         musicSpinner.adapter = musicAdapter(musicList)
         musicSpinner.visibility = View.GONE
+        for(id in 1..alarmList.size){
+            val alarmId = realm.where<AlarmTable>().equalTo("alarmId",id).findFirst()
+            timeList.add(alarmId?.timer.toString())
+        }
     }
 
     override fun onResume() {
@@ -89,28 +97,41 @@ class AlarmSetActivity : AppCompatActivity() {
                         //設定した時間
                         var time = timePicker.text.toString()
 
-                        intent.putExtra("setTime", time)
-                        alarm.timer = time
+                        for(setTime in timeList){
+                            if(time.equals("起床時間を設定する")) {
+                                Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
+                                startActivity<AlarmSetActivity>()
+                                break
+                            }else if(time.equals(setTime)){
+                                Toast.makeText(applicationContext, "同じ時間が既に登録されています", Toast.LENGTH_LONG).show()
+                                startActivity<AlarmSetActivity>()
+                                break
+                            }else{
+                                intent.putExtra("setTime", time)
+                                alarm.timer = time
 
-                        //スヌーズ設定
-                        var snooze = snoozeFlag.isChecked.toString()
-                        alarm.snoozeFlag = snooze
+                                //スヌーズ設定
+                                var snooze = snoozeFlag.isChecked.toString()
+                                alarm.snoozeFlag = snooze
 
-                        //音楽の再生設定
-                        var music = musicFlag.isChecked.toString()
-                        println(music)
-                        alarm.musicFlag = music
+                                //音楽の再生設定
+                                var music = musicFlag.isChecked.toString()
+                                println(music)
+                                alarm.musicFlag = music
 
-                        //音楽のファイルパス
-                        alarm.musicPath = musicPath
-                        val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
-                        val intent = Intent(applicationContext, AlarmStopActivity::class.java)
-                        intent.putExtra("activityFlag", "0")
-                        intent.putExtra("setTime",alarm.timer)
-                        intent.putExtra("musicFlag",alarm.musicFlag)
-                        intent.putExtra("musicPath",alarm.musicPath)
-                        intent.putExtra("snoozeFlag",alarm.snoozeFlag)
-                        startActivity(intent)
+                                //音楽のファイルパス
+                                alarm.musicPath = musicPath
+                                val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
+                                val intent = Intent(applicationContext, AlarmStopActivity::class.java)
+                                intent.putExtra("activityFlag", "0")
+                                intent.putExtra("setTime",alarm.timer)
+                                intent.putExtra("musicFlag",alarm.musicFlag)
+                                intent.putExtra("musicPath",alarm.musicPath)
+                                intent.putExtra("snoozeFlag",alarm.snoozeFlag)
+                                startActivity(intent)
+                            }
+                        }
+
                     }
                 }catch (e:NullPointerException){
                     Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
