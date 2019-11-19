@@ -8,9 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="TimePicker">
-        <item name="android:numbersTextColor">#000</item>
-        <item name="android:textColor">#FFF</item>
+    <style name="CustomSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">#ececec</item>
+        <item name="android:colorForeground">#fff</item>
+
+
     </style>
 
 </resources>

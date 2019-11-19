@@ -23,16 +23,20 @@
 
     <Switch
             android:id="@+id/musicFlag"
-            android:layout_width="200dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="24dp"
-            android:text="musiclock"
+            android:layout_width="65dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="50dp"
+
             android:textColor="#fffaf0"
             android:textColorHint="#fffaf0"
+            android:theme="@style/CustomSwitch"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.72"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/snoozeFlag" />
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/snoozeFlag"
+
+
+            />
 
     <Spinner
             android:id="@+id/musicSpinner"
@@ -49,16 +53,18 @@
 
     <Switch
             android:id="@+id/snoozeFlag"
-            android:layout_width="200dp"
-            android:layout_height="53dp"
+            android:layout_width="65dp"
+            android:layout_height="40dp"
             android:layout_marginTop="52dp"
-            android:text="スヌーズ"
+            android:layout_marginEnd="50dp"
+
             android:textColor="#fffaf0"
             android:textColorHint="#fffaf0"
+            android:theme="@style/CustomSwitch"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.72"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+            app:layout_constraintStart_toEndOf="@+id/スヌーズ"
+            app:layout_constraintTop_toBottomOf="@+id/timePicker"
+            />
 
     <TextView
             android:id="@+id/timePicker"
@@ -74,7 +80,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
     <ImageView
             android:id="@+id/imageView"
@@ -85,4 +92,30 @@
             app:layout_constraintBottom_toTopOf="@+id/snoozeFlag"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@mipmap/touch" />
+
+    <TextView
+            android:id="@+id/スヌーズ"
+            android:layout_width="79dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="197dp"
+            android:layout_marginTop="52dp"
+            android:gravity="center"
+            android:text="スヌーズ"
+            android:textColor="#fffaf0"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+
+    <TextView
+            android:id="@+id/textView2"
+            android:layout_width="79dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="197dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="音楽不変"
+            android:textColor="#fffaf0"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/スヌーズ" />
 </androidx.constraintlayout.widget.ConstraintLayout>
