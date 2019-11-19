@@ -1,6 +1,8 @@
 package f1.sleepLeader
 import android.content.Context
+import android.graphics.Color
 import android.text.format.DateFormat
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,7 +47,12 @@ class alarmListAdapter(context : Context,alarmListTimer : List<timerData>) : Arr
         val timerList = getItem(position) as timerData
         viewHolder.id = timerList.alarmId.toLong()
         viewHolder.timer.text = timerList.alarmTime
-
+        //Listの文字色
+        viewHolder.timer.setTextColor(Color.rgb(255,250,240))
+        //Listの文字サイズ
+        viewHolder.timer.textSize = 50F
+        //List中央揃え
+        viewHolder.timer.gravity= Gravity.CENTER
         return view
     }
 }
