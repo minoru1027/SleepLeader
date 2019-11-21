@@ -2,7 +2,9 @@ package f1.sleepLeader
 
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.app.AlarmManager
+import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -14,12 +16,14 @@ import android.os.Bundle
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.CountDownTimer
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_alarm_stop.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.startService
 import java.lang.IllegalArgumentException
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -27,7 +31,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
+class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.ActivityLifecycleCallbacks{
 
     private lateinit var realm : Realm
     private lateinit var snoozeFlag : String
@@ -61,6 +65,8 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_stop)
         realm = Realm.getDefaultInstance()
+
+        startService(Intent(this,DestroyingService::class.java))
 
         nextTimer.visibility = View.GONE
 
@@ -199,6 +205,19 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        mpStop()
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this,AlarmBroadcastReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.cancel(pendingIntent)
+
+        if(activityFlag.equals("0")){
+            startActivity<AlarmSetActivity>()
+        }
+    }
 
     private fun setTimer(time : Date?){
         calendarNow.time = getNow()
@@ -337,6 +356,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
     override fun onPause() {
         super.onPause()
         //センサーの終了
+
         val sensorManager = this.getSystemService(Context.SENSOR_SERVICE)
                 as SensorManager
         sensorManager.unregisterListener(this)
@@ -344,23 +364,42 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener{
 
     override fun onStop() {
         super.onStop()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this,AlarmBroadcastReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.cancel(pendingIntent)
         try {
-            mpStart()
+            mpStop()
         }catch (e:IllegalStateException){
             println(e)
         }
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        try {
-            mpStop()
-           val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(this,AlarmBroadcastReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            alarmManager.cancel(pendingIntent)
-        }catch (e:IllegalStateException){
-            println(e)
-        }
+
+    //以下Application.ActivityLifecycleCallbacksに必要な文
+    override fun onActivityPaused(activity: Activity?) {
+    }
+
+    override fun onActivityResumed(activity: Activity?) {
+    }
+
+    override fun onActivityStarted(activity: Activity?) {
+    }
+
+    override fun onActivityStopped(activity: Activity?) {
+    }
+
+    override fun onActivityDestroyed(activity: Activity?) {
+    }
+    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+    }
+
+    override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+
     }
     //シェイク機能のメソッド
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {

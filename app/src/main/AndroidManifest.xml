@@ -28,6 +28,9 @@
         <activity android:name=".AlarmListActivity" />
 
         <receiver android:name=".AlarmBroadcastReceiver" />
+
+        <service android:name=".DestroyingService"
+            android:stopWithTask="false"/>
     </application>
 
 </manifest>
