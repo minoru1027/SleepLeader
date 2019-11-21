@@ -9,6 +9,7 @@ import android.os.Build
 //import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 //import android.support.v7.app.AppCompatViewInflater
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
@@ -69,7 +70,11 @@ class AlarmListActivity : AppCompatActivity() {
         }
 
         alarmStopButtom.setOnClickListener{
-            startActivity<AlarmStopActivity>("timerList" to timerList,"activityFlag" to "1")
+            if(timerList.size === 0) {
+                Toast.makeText(this, "何もセットしてへんやん", Toast.LENGTH_LONG).show()
+            } else {
+                startActivity<AlarmStopActivity>("timerList" to timerList, "activityFlag" to "1")
+            }
         }
     }
 

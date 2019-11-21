@@ -214,9 +214,6 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         alarmManager.cancel(pendingIntent)
 
-        if(activityFlag.equals("0")){
-            startActivity<AlarmSetActivity>()
-        }
     }
 
     private fun setTimer(time : Date?){
