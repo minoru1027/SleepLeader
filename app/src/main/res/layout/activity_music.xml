@@ -11,12 +11,13 @@
 
     <TextView
             android:id="@+id/text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="430dp"
+            android:layout_height="40dp"
+            android:background="#2D3C6D"
             android:gravity="center"
             android:text="就寝時"
-            android:textColor="#fffaf0"
-            android:textSize="30sp"
+            android:textColor="#FAF16D"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,13 +34,14 @@
 
     <TextView
             android:id="@+id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="430dp"
+            android:layout_height="40dp"
             android:layout_marginTop="8dp"
+            android:background="#00A9CD"
             android:gravity="center"
             android:text="起床時"
-            android:textColor="#fffaf0"
-            android:textSize="30sp"
+            android:textColor="#F18900"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/musicListView" />
