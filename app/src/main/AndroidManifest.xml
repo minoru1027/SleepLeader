@@ -10,10 +10,8 @@
             android:roundIcon="@drawable/icon"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-        <activity android:name=".FadeIn">
-        </activity>
-
+        <activity android:name=".AlarmEditActivity"></activity>
+        <activity android:name=".FadeIn"></activity>
         <activity android:name=".AlarmActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +22,9 @@
         <activity android:name=".AlarmStopActivity" />
         <activity android:name=".AlarmSetActivity" />
         <activity android:name=".MusicActivity" />
+
         <receiver android:name=".AlarmReceiver" />
+
         <activity android:name=".AlarmListActivity" />
 
         <receiver android:name=".AlarmBroadcastReceiver" />

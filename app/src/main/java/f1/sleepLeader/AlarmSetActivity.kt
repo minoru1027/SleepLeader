@@ -49,9 +49,14 @@ class AlarmSetActivity : AppCompatActivity() {
 
         musicSpinner.adapter = musicAdapter(musicList)
         musicSpinner.visibility = View.GONE
-        for(id in 1..alarmList.size){
-            val alarmId = realm.where<AlarmTable>().equalTo("alarmId",id).findFirst()
-            timeList.add(alarmId?.timer.toString())
+        println(alarmList.size)
+        if(alarmList.size == 0){
+
+        }else {
+            for (id in 1..alarmList.size) {
+                val alarmId = realm.where<AlarmTable>().equalTo("alarmId", id).findFirst()
+                timeList.add(alarmId?.timer.toString())
+            }
         }
     }
 
@@ -96,7 +101,29 @@ class AlarmSetActivity : AppCompatActivity() {
 
                         //設定した時間
                         var time = timePicker.text.toString()
+                        if(timeList.size === 0) {
+                            intent.putExtra("setTime", time)
+                            alarm.timer = time
+                            //スヌーズ設定
+                            var snooze = snoozeFlag.isChecked.toString()
+                            alarm.snoozeFlag = snooze
 
+                            //音楽の再生設定
+                            var music = musicFlag.isChecked.toString()
+                            println(music)
+                            alarm.musicFlag = music
+
+                            //音楽のファイルパス
+                            alarm.musicPath = musicPath
+                            val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
+                            val intent = Intent(applicationContext, AlarmStopActivity::class.java)
+                            intent.putExtra("activityFlag", "0")
+                            intent.putExtra("setTime",alarm.timer)
+                            intent.putExtra("musicFlag",alarm.musicFlag)
+                            intent.putExtra("musicPath",alarm.musicPath)
+                            intent.putExtra("snoozeFlag",alarm.snoozeFlag)
+                            startActivity(intent)
+                        }else{
                         for(setTime in timeList){
                             if(time.equals("起床時間を設定する")) {
                                 Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
@@ -106,10 +133,9 @@ class AlarmSetActivity : AppCompatActivity() {
                                 Toast.makeText(applicationContext, "同じ時間が既に登録されています", Toast.LENGTH_LONG).show()
                                 startActivity<AlarmSetActivity>()
                                 break
-                            }else{
+                            }else {
                                 intent.putExtra("setTime", time)
                                 alarm.timer = time
-
                                 //スヌーズ設定
                                 var snooze = snoozeFlag.isChecked.toString()
                                 alarm.snoozeFlag = snooze
@@ -121,14 +147,17 @@ class AlarmSetActivity : AppCompatActivity() {
 
                                 //音楽のファイルパス
                                 alarm.musicPath = musicPath
-                                val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
-                                val intent = Intent(applicationContext, AlarmStopActivity::class.java)
+                                val timer =
+                                    realm.where<AlarmTable>().equalTo("timer", time).findFirst()
+                                val intent =
+                                    Intent(applicationContext, AlarmStopActivity::class.java)
                                 intent.putExtra("activityFlag", "0")
-                                intent.putExtra("setTime",alarm.timer)
-                                intent.putExtra("musicFlag",alarm.musicFlag)
-                                intent.putExtra("musicPath",alarm.musicPath)
-                                intent.putExtra("snoozeFlag",alarm.snoozeFlag)
+                                intent.putExtra("setTime", alarm.timer)
+                                intent.putExtra("musicFlag", alarm.musicFlag)
+                                intent.putExtra("musicPath", alarm.musicPath)
+                                intent.putExtra("snoozeFlag", alarm.snoozeFlag)
                                 startActivity(intent)
+                            }
                             }
                         }
 
