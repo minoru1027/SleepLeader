@@ -45,7 +45,7 @@ class AlarmListActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
 
         val alarmList = realm.where<AlarmTable>().findAll()
-      
+        println(alarmList)
         sortList(alarmList)
 
     }
@@ -61,6 +61,13 @@ class AlarmListActivity : AppCompatActivity() {
 
         }
 
+        listView.setOnItemLongClickListener{ parent, view, position, id ->
+            val timePosition = parent.getItemAtPosition(position) as timerData
+            val alarmId = timePosition.alarmId.toLong()
+            startActivity<AlarmEditActivity>("alarmId" to alarmId)
+            true
+        }
+
         alarmStopButtom.setOnClickListener{
             startActivity<AlarmStopActivity>("timerList" to timerList,"activityFlag" to "1")
         }
@@ -74,13 +81,13 @@ class AlarmListActivity : AppCompatActivity() {
 
         for(id in 1..alarmList.size){
             val alarmId = realm.where<AlarmTable>().equalTo("alarmId",id).findFirst()
-            calendar = Calendar.getInstance()
-            val t =alarmId?.timer?.toDate()
-            calendar.time = t
+                calendar = Calendar.getInstance()
+                val t = alarmId?.timer?.toDate()
+                calendar.time = t
 
-            idList.add(id)
-            timeList.add(alarmId?.timer.toString())
-            calendarList.add(calendar.timeInMillis)
+                idList.add(id)
+                timeList.add(alarmId?.timer.toString())
+                calendarList.add(calendar.timeInMillis)
         }
 
         for(i in 1..idList.size-1 step 1){
