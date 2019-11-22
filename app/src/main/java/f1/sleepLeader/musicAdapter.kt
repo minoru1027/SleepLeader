@@ -1,5 +1,7 @@
 package f1.sleepLeader
 
+import android.graphics.Color
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +39,9 @@ class musicAdapter(data : OrderedRealmCollection<MusicTable>?) : RealmBaseAdapte
             viewHolder.id = musicTable.musicId
             viewHolder.musicName.text = musicTable.musicName
             viewHolder.musicPath = musicTable.musicPath
+            viewHolder.musicName.setTextColor(Color.rgb(211,211,211))
+            //viewHolder.musicName.setBackgroundColor(Color.rgb(225,228,225))
+            //viewHolder.musicName.textSize = 50F
         }
 
         return view
