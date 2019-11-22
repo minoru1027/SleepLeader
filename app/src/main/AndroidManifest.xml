@@ -5,9 +5,9 @@
     <application
             android:name=".SleepLeaderApplication"
             android:allowBackup="true"
-            android:icon="@drawable/icon"
+            android:icon="@drawable/sheep"
             android:label="@string/app_name"
-            android:roundIcon="@drawable/icon"
+            android:roundIcon="@drawable/sheep"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".AlarmEditActivity"></activity>
