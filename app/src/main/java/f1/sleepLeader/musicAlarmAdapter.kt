@@ -39,8 +39,8 @@ class musicAlarmAdapter(data : OrderedRealmCollection<MusicAlarmTable>?) : Realm
             viewHolder.musicName.text = musicTable.musicAlarmName
             viewHolder.musicPath = musicTable.musicAlarmPath
             viewHolder.musicName.setTextColor(Color.rgb(211,211,211))
-            //viewHolder.musicName.setBackgroundColor(Color.rgb(225,228,225))
-            //viewHolder.musicName.textSize = 50F
+            viewHolder.musicName.gravity= Gravity.CENTER
+            viewHolder.musicName.textSize = 20F
         }
 
         return view
