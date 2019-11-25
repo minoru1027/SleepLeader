@@ -38,6 +38,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
     private lateinit var musicFlag : String
     private var activityFlag = ""
     private var musicPath = ""
+    private var snoozeSetFlag :Boolean  = false
     private var timerList : HashMap<Long,String> = hashMapOf()
     private var timeList  : ArrayList<String> = arrayListOf()
     private var calendarList : ArrayList<Long> = arrayListOf()
@@ -70,7 +71,19 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
         nextTimer.visibility = View.GONE
 
+        val timeNow = calendarNow.get(Calendar.HOUR_OF_DAY)
+
+        if(timeNow >=4 && timeNow <= 8){
+            background.setImageResource(R.mipmap.ohayou)
+        }else if(timeNow >= 9 && timeNow <=16) {
+            background.setImageResource(R.mipmap.ohirune)
+        }else if(timeNow >=17 && timeNow <= 19){
+            background.setImageResource(R.mipmap.yuuyake)
+        }else if(timeNow >= 20 && timeNow <= 3){
+            background.setImageResource(R.mipmap.yozora)
+        }
         activityFlag = intent.getStringExtra("activityFlag")
+
 
         //AlarmSetActivityか、AlarmListActivityのどっちの遷移かを判定
         if(activityFlag.equals("0")){
@@ -158,6 +171,10 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
             if (isChecked) {
                 mpStop()
+                val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val intent = Intent(this,AlarmBroadcastReceiver::class.java)
+                val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                alarmManager.cancel(pendingIntent)
                 if (snoozeFlag.equals("true")) {
                     onSetSnooze()
                     snoozeFlag = "false"
@@ -259,6 +276,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
     private fun onSetSnooze(){
         AlarmTime.setText(dataFormat.format(0))
         nextTimer.visibility = View.GONE
+        snoozeSetFlag = true
 
         var calendar: Calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR,year)
@@ -439,16 +457,20 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                 if (speed > shakeSpeed) {
 
                     // 振ってると判断したら、シャッフルする
-                    if (++shakeCount > 25) {
+                    if (++shakeCount > 30) {
                         shakeCount = 0F
 
                         // シャッフル
-                        mpStop()
-                        musicPath = MusicRandom()
-                        val res = this.resources
-                        var soundId = res.getIdentifier(musicPath,"raw",this.packageName)
-                        mediaPlayer = MediaPlayer.create(this,soundId)
-                        mpStart()
+                        if(snoozeSetFlag) {
+
+                        }else{
+                            mpStop()
+                            musicPath = MusicRandom()
+                            val res = this.resources
+                            var soundId = res.getIdentifier(musicPath, "raw", this.packageName)
+                            mediaPlayer = MediaPlayer.create(this, soundId)
+                            mpStart()
+                        }
                     }
                 } else {
                     // 途中でフリが収まった場合は、カウントを初期化
