@@ -29,13 +29,13 @@ class FadeIn : AppCompatActivity() {
 
         //タイトル
         var animation = AlphaAnimation(1f,0f)
-            animation.duration = 5000
+            animation.duration = 3000
             animation.fillAfter = true
         title.startAnimation(animation)
 
         //メッセージ
         var animsg = AlphaAnimation(0f,1f)
-            animsg.duration = 5000
+            animsg.duration = 3000
             animsg.fillAfter = true
         msg.startAnimation(animsg)
         name.startAnimation(animsg)
@@ -43,6 +43,6 @@ class FadeIn : AppCompatActivity() {
         Handler().postDelayed({
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
-        },7000)
+        },4000)
     }
 }
