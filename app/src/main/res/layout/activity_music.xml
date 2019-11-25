@@ -11,19 +11,19 @@
 
     <TextView
             android:id="@+id/text1"
-            android:layout_width="410dp"
+            android:layout_width="0dp"
             android:layout_height="43dp"
             android:background="#000080"
             android:drawableLeft="@mipmap/moon"
+            android:fontFamily="sans-serif-light"
             android:gravity="left"
-            android:text="就寝時"
+            android:text=" Sleeping"
             android:textColor="#fffaf0"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
 
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
             android:id="@+id/musicListView"
@@ -37,20 +37,20 @@
 
     <TextView
             android:id="@+id/text2"
-            android:layout_width="410dp"
+            android:layout_width="0dp"
             android:layout_height="47dp"
             android:layout_marginTop="8dp"
             android:background="#0099cc"
             android:drawableLeft="@mipmap/sun"
+            android:fontFamily="sans-serif-light"
             android:gravity="left"
-            android:text="起床時"
+            android:text="Getting up"
             android:textColor="#fffaf0"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/musicListView"
 
-            />
+            app:layout_constraintTop_toBottomOf="@+id/musicListView" />
 
     <ListView
             android:id="@+id/musicAlarmListView"

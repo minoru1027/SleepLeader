@@ -40,8 +40,8 @@ class musicAdapter(data : OrderedRealmCollection<MusicTable>?) : RealmBaseAdapte
             viewHolder.musicName.text = musicTable.musicName
             viewHolder.musicPath = musicTable.musicPath
             viewHolder.musicName.setTextColor(Color.rgb(211,211,211))
-            //viewHolder.musicName.setBackgroundColor(Color.rgb(225,228,225))
-            //viewHolder.musicName.textSize = 50F
+            viewHolder.musicName.gravity= Gravity.CENTER
+            viewHolder.musicName.textSize = 20F
         }
 
         return view
