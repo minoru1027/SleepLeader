@@ -65,7 +65,7 @@ class MusicActivity : MediaPlayerActivity(){
             }else {
                 mediaPlayer = MediaPlayer.create(this, soundId)
                 mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                mpStart()
+                mpStart(this)
                 musicFlag = true
                 sId = soundId
             }
