@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "758877204496",
-    "firebase_url": "https://test-1aa1d.firebaseio.com",
-    "project_id": "test-1aa1d",
-    "storage_bucket": "test-1aa1d.appspot.com"
+    "project_number": "92449917078",
+    "firebase_url": "https://sleepledar.firebaseio.com",
+    "project_id": "sleepledar",
+    "storage_bucket": "sleepledar.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:758877204496:android:811cff7435d930689bda95",
+        "mobilesdk_app_id": "1:92449917078:android:a645c967418d2d08655ab7",
         "android_client_info": {
           "package_name": "f1.sleepLeader"
         }
       },
       "oauth_client": [
         {
-          "client_id": "758877204496-b33agvv3i75ngop0kvomavc2durohqsb.apps.googleusercontent.com",
+          "client_id": "92449917078-mqed3876b6lmkvbdg0aq7n9n6oieojt2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "f1.sleepLeader",
+            "certificate_hash": "ce2e2778ee635adb67ebf56ef25e4a89bbd05083"
+          }
+        },
+        {
+          "client_id": "92449917078-3143u9e6lau5ulvvle9perlcl27o7j0g.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBSMZbXgXd3naSuv8eX2XruqIlut5A7yjY"
+          "current_key": "AIzaSyDWW5uqYdOy8BShePc0OxHDV6xo6wj2pqg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "758877204496-b33agvv3i75ngop0kvomavc2durohqsb.apps.googleusercontent.com",
+              "client_id": "92449917078-3143u9e6lau5ulvvle9perlcl27o7j0g.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
