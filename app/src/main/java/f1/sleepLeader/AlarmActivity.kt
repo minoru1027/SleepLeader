@@ -1,5 +1,8 @@
 package f1.sleepLeader
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 //import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -31,8 +34,8 @@ class AlarmActivity : AppCompatActivity() {
 
         when(musicid){
              null->{
-                 val musicName : Array<String> = arrayOf("日の陰り","Moon","静止した宇宙","夜空に舞う鳥","夕べの星")
-                 val musicPath : Array<String> = arrayOf("hinokageri","moon","seishishitauchu","yozoranimautori","yuubenohoshi")
+                 val musicName : Array<String> = arrayOf("雨漏り","夏の夜","雨","大きな波","虫のせせらぎ")
+                 val musicPath : Array<String> = arrayOf("amamori","natunoyoru","rain","sleep_wave","suzumushi")
                  var i = 0
                  while(i != musicName.size){
                      if(i == musicName.size){
@@ -53,8 +56,8 @@ class AlarmActivity : AppCompatActivity() {
 
         when(musicAlarmId){
             null->{
-                val musicAlarmName : Array<String> = arrayOf("チョコレート大作戦","ファミポップⅣ","軽序曲","長靴でお出かけ","吹奏楽部の夏")
-                val musicAlarmPath : Array<String> = arrayOf("chocolatedaisakusen","famipop4","keijokyoku","nagagutsudeodekake","suisougakubunonatsu")
+                val musicAlarmName : Array<String> = arrayOf("ちゅうちゅう","鳥の声","朝食を作る","ちゅんちゅん","小さい波")
+                val musicAlarmPath : Array<String> = arrayOf("kyuketu1","bird","breakfast","tyuntyun","wave")
                 var i = 0
                 while(i != musicAlarmName.size){
                     if(i == musicAlarmName.size){
