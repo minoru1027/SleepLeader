@@ -56,7 +56,7 @@ class AlarmActivity : AppCompatActivity() {
 
         when(musicAlarmId){
             null->{
-                val musicAlarmName : Array<String> = arrayOf("ちゅうちゅう","鳥の声","朝食を作る","ちゅんちゅん","小さい波")
+                val musicAlarmName : Array<String> = arrayOf("R18","鳥の声","朝食を作る","小鳥","小さい波")
                 val musicAlarmPath : Array<String> = arrayOf("kyuketu1","bird","breakfast","tyuntyun","wave")
                 var i = 0
                 while(i != musicAlarmName.size){
