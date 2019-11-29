@@ -33,6 +33,7 @@ import kotlin.concurrent.timer
 class AlarmSetActivity : AppCompatActivity() {
 
     private lateinit var realm : Realm
+    private var firebaseFlag : String = ""
     private var musicPath : String = ""
     private var alarmRealm : Realm = Realm.getDefaultInstance()
     private var timeList : ArrayList<String> = ArrayList()
@@ -85,7 +86,7 @@ class AlarmSetActivity : AppCompatActivity() {
 
                 val musicPosition = musicSpinner.getItemAtPosition(position) as MusicTable
                 musicPath = musicPosition.musicPath
-                println(musicPath)
+                firebaseFlag = musicPosition.firebaseFlag
 
             }
 
@@ -134,6 +135,7 @@ class AlarmSetActivity : AppCompatActivity() {
 
                         //音楽のファイルパス
                         alarm.musicPath = musicPath
+                        alarm.firebaseFlag = firebaseFlag
                         val timer = realm.where<AlarmTable>().equalTo("timer", time).findFirst()
                         val intent = Intent(applicationContext, AlarmStopActivity::class.java)
                         intent.putExtra("activityFlag", "0")
@@ -141,6 +143,7 @@ class AlarmSetActivity : AppCompatActivity() {
                         intent.putExtra("musicFlag", alarm.musicFlag)
                         intent.putExtra("musicPath", alarm.musicPath)
                         intent.putExtra("snoozeFlag", alarm.snoozeFlag)
+                        intent.putExtra("firebaseFlag",alarm.firebaseFlag)
                         startActivity(intent)
                         }
                     }

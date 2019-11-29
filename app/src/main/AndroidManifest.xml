@@ -11,6 +11,11 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".AlarmEditActivity"></activity>
+        <activity android:name=".MusicDownLoadActivity">
+
+        </activity>
+        <activity android:name=".MediaPlayerActivity"></activity>
+        <activity android:name=".MusicPlayActivity"></activity>
         <activity android:name=".FadeIn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AlarmActivity">
+
         </activity>
         <activity android:name=".AlarmStopActivity" />
         <activity android:name=".AlarmSetActivity" />

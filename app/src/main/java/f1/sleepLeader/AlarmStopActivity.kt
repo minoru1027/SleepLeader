@@ -38,6 +38,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
     private lateinit var musicFlag : String
     private var activityFlag = ""
     private var musicPath = ""
+    private var firebaseFlag = ""
     private var snoozeSetFlag :Boolean  = false
     private var timerList : HashMap<Long,String> = hashMapOf()
     private var timeList  : ArrayList<String> = arrayListOf()
@@ -65,6 +66,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_stop)
+
         realm = Realm.getDefaultInstance()
 
         startService(Intent(this,DestroyingService::class.java))
@@ -92,6 +94,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
             musicFlag = intent.getStringExtra("musicFlag")
             if(musicFlag.equals("true")) {
                 musicPath = intent.getStringExtra("musicPath")
+                firebaseFlag = intent.getStringExtra("firebaseFlag")
             }
 
             val time = setTime?.toDate()
@@ -111,6 +114,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
             if(timeCount+1 === timeList.size){
                 AlarmTime.text = timeList[timeCount]
+                timeCount++
             }else{
                 nextTimer.visibility = View.VISIBLE
 
@@ -143,15 +147,20 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
             musicFlag = timeSet?.musicFlag.toString()
             if(musicFlag.equals("true")) {
                 musicPath = timeSet?.musicPath.toString()
+                firebaseFlag = timeSet?.firebaseFlag.toString()
             }
         }
         if(musicFlag.equals("false")){
             musicPath = MusicRandom()
         }
-        val res = this.resources
-        var soundId = res.getIdentifier(musicPath,"raw",this.packageName)
-        mediaPlayer = MediaPlayer.create(this,soundId)
-        mpStart()
+        if(firebaseFlag.equals("ON")) {
+            mpStart(musicPath)
+        }else {
+            val res = this.resources
+            var soundId = res.getIdentifier(musicPath, "raw", this.packageName)
+            mediaPlayer = MediaPlayer.create(this, soundId)
+            mpStart()
+        }
     }
     override fun onResume() {
         super.onResume()
@@ -216,6 +225,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                     }
                 }
                 Thread.sleep(100)
+
                 switch2.setChecked(false)
             } else if (!isChecked) {
             }
@@ -296,12 +306,8 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         val interval: Long = 10
         //カウントダウンじゃい
         var countDown = CountDown(countNumber, interval)
-        val alarmIntent = Intent(this, AlarmBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        manager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-
+        setAlarmManager(calendar)
         countDown.start()
 
     }
@@ -336,6 +342,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         }
         val musicId = realm.where<MusicTable>().equalTo("musicId",pathId).findFirst()
         val musicPath = musicId?.musicPath.toString()
+        firebaseFlag = musicId?.firebaseFlag.toString()
 
         return musicPath
     }
@@ -466,10 +473,15 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                         }else{
                             mpStop()
                             musicPath = MusicRandom()
-                            val res = this.resources
-                            var soundId = res.getIdentifier(musicPath, "raw", this.packageName)
-                            mediaPlayer = MediaPlayer.create(this, soundId)
-                            mpStart()
+
+                            if(firebaseFlag.equals("ON")) {
+                                mpStart(musicPath)
+                            }else {
+                                val res = this.resources
+                                var soundId = res.getIdentifier(musicPath, "raw", this.packageName)
+                                mediaPlayer = MediaPlayer.create(this, soundId)
+                                mpStart()
+                            }
                         }
                     }
                 } else {

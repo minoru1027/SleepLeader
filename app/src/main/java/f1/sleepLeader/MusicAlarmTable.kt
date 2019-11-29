@@ -8,4 +8,5 @@ open class MusicAlarmTable :RealmObject(){
     var musicAlarmId : Long = 0
     var musicAlarmName : String = ""
     var musicAlarmPath : String = ""
+    var firebaseAlarmFlag : String = ""
 }

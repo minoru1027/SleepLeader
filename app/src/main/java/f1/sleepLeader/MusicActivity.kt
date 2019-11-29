@@ -17,6 +17,7 @@ class MusicActivity : MediaPlayerActivity(){
     private lateinit var musicRealm: Realm
     private lateinit var musicAlarmRealm: Realm
     private var sId : Int = 0
+    private var name = ""
     private var musicFlag = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,38 +37,80 @@ class MusicActivity : MediaPlayerActivity(){
     override fun onResume() {
         super.onResume()
         musicListView.setOnItemClickListener{ parent, view, position, id ->
-                val musicListPosition = parent.getItemAtPosition(position) as MusicTable
-                val res = this.resources
-                var soundId = res.getIdentifier(musicListPosition.musicPath,"raw",this.packageName)
-                if(musicFlag == true){
+            val musicListPosition = parent.getItemAtPosition(position) as MusicTable
+
+            if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()&&name.equals(musicListPosition.musicName)){
                 mpStop()
-                musicFlag = false
-            }
-            if(soundId === sId){
-                sId = 0
-            }else {
-                mediaPlayer = MediaPlayer.create(this, soundId)
-                mpStart()
-                musicFlag = true
-                sId = soundId
-            }
+                name = ""
+            }else if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()){
+                mpStop()
+                if(musicListPosition.firebaseFlag.equals("ON")){
+                    name = musicListPosition.musicName
+                    mpStart(musicListPosition.musicPath)
+                }else {
+                    val res = this.resources
+                    var soundId = res.getIdentifier(
+                        musicListPosition.musicPath,
+                        "raw",
+                        this.packageName
+                    )
+                    name = musicListPosition.musicName
+                    mediaPlayer = MediaPlayer.create(this, soundId)
+                    mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                    mpStart()
+                }
+            }else if (musicListPosition.firebaseFlag.equals("ON")) {
+                mediaPlayer.reset()
+                mpStart(musicListPosition.musicPath)
+                name = musicListPosition.musicName
+                } else {
+                     mediaPlayer.reset()
+                    val res = this.resources
+                    var soundId = res.getIdentifier(
+                        musicListPosition.musicPath,
+                        "raw",
+                        this.packageName
+                    )
+                    name = musicListPosition.musicName
+                    mediaPlayer = MediaPlayer.create(this, soundId)
+                    mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                    mpStart()
+                }
         }
         musicAlarmListView.setOnItemClickListener{ parent, view, position, id ->
             val musicAlarmListPosition = parent.getItemAtPosition(position) as MusicAlarmTable
-            val res = this.resources
-            var soundId = res.getIdentifier(musicAlarmListPosition.musicAlarmPath,"raw",this.packageName)
-            if(musicFlag == true){
+            if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()&&name.equals(musicAlarmListPosition.musicAlarmName)){
                 mpStop()
-                musicFlag = false
-            }
-            if(soundId === sId){
-                sId = 0
+                name =""
+            }else if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()){
+                mpStop()
+                if(musicAlarmListPosition.firebaseAlarmFlag.equals("ON")){
+                    mpStart(musicAlarmListPosition.musicAlarmPath)
+                    name = musicAlarmListPosition.musicAlarmName
+                }else {
+                    val res = this.resources
+                    var soundId = res.getIdentifier(
+                        musicAlarmListPosition.musicAlarmPath,
+                        "raw",
+                        this.packageName
+                    )
+                    name = musicAlarmListPosition.musicAlarmName
+                    mediaAlarmPlayer = MediaPlayer.create(this, soundId)
+                    mediaAlarmPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                    mpStart(this)
+                }
+            }else if(musicAlarmListPosition.firebaseAlarmFlag.equals("ON")){
+                mediaAlarmPlayer.reset()
+                mpStart(musicAlarmListPosition.musicAlarmPath)
+                name = musicAlarmListPosition.musicAlarmName
             }else {
-                mediaPlayer = MediaPlayer.create(this, soundId)
-                mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                mediaAlarmPlayer.reset()
+                val res = this.resources
+                var soundId = res.getIdentifier(musicAlarmListPosition.musicAlarmPath,"raw",this.packageName)
+                name = musicAlarmListPosition.musicAlarmName
+                mediaAlarmPlayer = MediaPlayer.create(this, soundId)
+                mediaAlarmPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
                 mpStart(this)
-                musicFlag = true
-                sId = soundId
             }
         }
     }

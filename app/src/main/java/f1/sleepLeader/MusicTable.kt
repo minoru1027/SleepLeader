@@ -8,4 +8,5 @@ open class MusicTable :RealmObject(){
     var musicId : Long = 0
     var musicName : String = ""
     var musicPath : String = ""
+    var firebaseFlag : String = ""
 }

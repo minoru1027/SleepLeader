@@ -31,11 +31,12 @@ class AlarmActivity : AppCompatActivity() {
         val musicAlarmTable = musicAlarmRealm.where<MusicAlarmTable>().equalTo("musicAlarmId",alarmId).findFirst()
         var musicid = musicTable?.musicId
         var musicAlarmId = musicAlarmTable?.musicAlarmId
-
+        val firebaseFlag : Array<String> = arrayOf("OFF","OFF","OFF","OFF","OFF")
         when(musicid){
              null->{
                  val musicName : Array<String> = arrayOf("雨漏り","夏の夜","雨","大きな波","虫のせせらぎ")
                  val musicPath : Array<String> = arrayOf("amamori","natunoyoru","rain","sleep_wave","suzumushi")
+
                  var i = 0
                  while(i != musicName.size){
                      if(i == musicName.size){
@@ -47,7 +48,8 @@ class AlarmActivity : AppCompatActivity() {
                             var music = musicRealm.createObject<MusicTable>(nextId)
                             music.musicName = musicName[i]
                             music.musicPath = musicPath[i]
-                            i++
+                             music.firebaseFlag = firebaseFlag[i]
+                             i++
                         }
                     }
                  }
@@ -58,6 +60,7 @@ class AlarmActivity : AppCompatActivity() {
             null->{
                 val musicAlarmName : Array<String> = arrayOf("R18","鳥の声","朝食を作る","小鳥","小さい波")
                 val musicAlarmPath : Array<String> = arrayOf("kyuketu1","bird","breakfast","tyuntyun","wave")
+
                 var i = 0
                 while(i != musicAlarmName.size){
                     if(i == musicAlarmName.size){
@@ -69,6 +72,7 @@ class AlarmActivity : AppCompatActivity() {
                             var music = musicAlarmRealm.createObject<MusicAlarmTable>(nextId)
                             music.musicAlarmName = musicAlarmName[i]
                             music.musicAlarmPath = musicAlarmPath[i]
+                            music.firebaseAlarmFlag = firebaseFlag[i]
                             i++
                         }
                     }
