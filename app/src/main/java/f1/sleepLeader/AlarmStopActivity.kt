@@ -180,6 +180,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
             if (isChecked) {
                 mpStop()
+                bgStop()
                 val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 val intent = Intent(this,AlarmBroadcastReceiver::class.java)
                 val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)

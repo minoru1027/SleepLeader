@@ -79,6 +79,7 @@ class MusicActivity : MediaPlayerActivity(){
         }
         musicAlarmListView.setOnItemClickListener{ parent, view, position, id ->
             val musicAlarmListPosition = parent.getItemAtPosition(position) as MusicAlarmTable
+            alarmFlag = true
             if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()&&name.equals(musicAlarmListPosition.musicAlarmName)){
                 mpStop()
                 name =""

@@ -15,6 +15,7 @@ class MusicPlayActivity :MediaPlayerActivity(){
     public fun MusicStop(){
         mpStop()
         musicFlag = true
+        alarmFlag = true
     }
     public fun AlarmMusicSet(res: Resources, context: Context){
 
