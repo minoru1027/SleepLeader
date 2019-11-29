@@ -9,6 +9,7 @@ import io.realm.Realm
 import io.realm.kotlin.where
 import java.util.Calendar
 import kotlinx.android.synthetic.main.activity_music.*
+import org.jetbrains.anko.startActivity
 import java.lang.RuntimeException
 
 class MusicActivity : MediaPlayerActivity(){
@@ -36,6 +37,9 @@ class MusicActivity : MediaPlayerActivity(){
 
     override fun onResume() {
         super.onResume()
+        button.setOnClickListener{
+            startActivity<MusicDownLoadActivity>()
+        }
         musicListView.setOnItemClickListener{ parent, view, position, id ->
             val musicListPosition = parent.getItemAtPosition(position) as MusicTable
 

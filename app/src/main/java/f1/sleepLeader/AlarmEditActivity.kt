@@ -27,6 +27,8 @@ class AlarmEditActivity : AppCompatActivity() {
     private var selectId : Long = 1
     private var timeList : ArrayList<String> = arrayListOf()
     private var boolean = true
+    private var setedTime = ""
+    private var selectedTime =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +49,7 @@ class AlarmEditActivity : AppCompatActivity() {
         selectId = intent.getLongExtra("alarmId",0)
 
         val select = realm.where<AlarmTable>().equalTo("alarmId",selectId).findFirst()
+        selectedTime = select?.timer.toString()
 
         timePicker.setText(select?.timer)
 
@@ -98,8 +101,11 @@ class AlarmEditActivity : AppCompatActivity() {
         AlarmSetting.setOnClickListener {
             var time = timePicker.text.toString()
             try{
-                if(time.equals("起床時間を設定する")) {
-                    Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
+                if(time.equals(selectedTime)) {
+
+                }else if(time.equals(setedTime)){
+                    Toast.makeText(applicationContext, "同じ時間が既に登録されています", Toast.LENGTH_LONG).show()
+                    boolean = false
                 }else {
                     for (setTime in timeList) {
                         if (time.equals(setTime)) {
@@ -118,6 +124,7 @@ class AlarmEditActivity : AppCompatActivity() {
                             var alarm = realm.where<AlarmTable>().equalTo("alarmId",selectId).findFirst()
                             intent.putExtra("setTime", time)
                             alarm?.timer = time
+                            setedTime = time
 
                             //スヌーズ設定
                             var snooze = snoozeFlag.isChecked.toString()
