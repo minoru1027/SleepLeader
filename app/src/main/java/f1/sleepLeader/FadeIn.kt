@@ -21,8 +21,8 @@ class FadeIn : AppCompatActivity() {
 
         //フォント設定
         val titlefont = Typeface.createFromAsset(assets,"Barkentina.otf")
-        val msgfont = Typeface.createFromAsset(assets,"kokugl.ttf")
-        val namefont = Typeface.createFromAsset(assets,"kokugl.ttf")
+        val msgfont = Typeface.createFromAsset(assets,"rabits.ttf")
+        val namefont = Typeface.createFromAsset(assets,"rabits.ttf")
         title.setTypeface(titlefont)
         msg.setTypeface(msgfont)
         name.setTypeface(namefont)
