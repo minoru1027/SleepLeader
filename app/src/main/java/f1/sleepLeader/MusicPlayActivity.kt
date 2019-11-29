@@ -10,16 +10,22 @@ import java.util.*
 class MusicPlayActivity :MediaPlayerActivity(){
 
     private var alarmRealm : Realm = Realm.getDefaultInstance()
+    private var firebaseFlag = ""
 
     public fun MusicStop(){
         mpStop()
+        musicFlag = true
     }
     public fun AlarmMusicSet(res: Resources, context: Context){
 
         val musicAlarmPath = MusicAlarmRandom()
-        var soundId = res.getIdentifier(musicAlarmPath,"raw",context.packageName)
-        mediaPlayer = MediaPlayer.create(context,soundId)
-        mpStart(context)
+        if(firebaseFlag.equals("ON")){
+            mpStart(context,musicAlarmPath)
+        }else {
+            var soundId = res.getIdentifier(musicAlarmPath, "raw", context.packageName)
+            mediaAlarmPlayer = MediaPlayer.create(context, soundId)
+            mpStart(context)
+        }
     }
 
     private fun MusicAlarmRandom() : String{
@@ -33,6 +39,7 @@ class MusicPlayActivity :MediaPlayerActivity(){
         }
         val musicAlarmId = alarmRealm.where<MusicAlarmTable>().equalTo("musicAlarmId",pathId).findFirst()
         val musicAlarmPath = musicAlarmId?.musicAlarmPath.toString()
+        firebaseFlag = musicAlarmId?.firebaseAlarmFlag.toString()
 
         return musicAlarmPath
     }

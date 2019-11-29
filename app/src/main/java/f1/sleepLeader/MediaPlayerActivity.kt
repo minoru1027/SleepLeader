@@ -4,8 +4,10 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
 import java.lang.IllegalStateException
 import java.util.*
@@ -18,10 +20,12 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
     private var playTime : Int = 0
     private var calendarTime : Calendar = Calendar.getInstance()
     private var alarmFlag :Boolean = false
-
+    val storage = FirebaseStorage.getInstance()
+    val storageRef = storage.reference
     companion object {
         @JvmField
         var mediaPlayer : MediaPlayer = MediaPlayer()
+        var mediaAlarmPlayer : MediaPlayer = MediaPlayer()
     }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -38,28 +42,75 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
         }
     }
 
+    fun mpStart(musicPath : String){
+            val path = "Music/" + musicPath
+            val dir = storageRef.child(path.trim())
+
+            dir.downloadUrl.addOnSuccessListener { uri ->
+                Log.i("Test", "3")
+                val url = uri.toString()
+                println(uri)
+                mediaPlayer.setDataSource(url)
+                mediaPlayer.setOnCompletionListener(this)
+                mediaPlayer.setOnPreparedListener(this::onPrepared)
+                mediaPlayer.prepare()
+                Thread.sleep(500)
+
+                if (mediaAlarmPlayer.isPlaying()) {
+                    mediaPlayer.reset()
+                }
+
+            }.addOnFailureListener {}
+    }
     fun mpStart(context: Context){
         try {
-            mediaPlayer.setVolume(alarmVolume,alarmVolume)
-            mediaPlayer.setOnCompletionListener(this)
-            mediaPlayer.start()
+            mediaAlarmPlayer.setVolume(alarmVolume,alarmVolume)
+            mediaAlarmPlayer.setOnCompletionListener(this)
+            mediaAlarmPlayer.start()
             alarmFlag = true
         }catch (e : IOException){
             Toast.makeText(context, "音楽処理時にエラー発生", Toast.LENGTH_LONG).show()
         }
     }
+    fun mpStart(context: Context,musicPath: String){
+        val path = "Music/"+musicPath
+        val dir = storageRef.child(path.trim())
+        dir.downloadUrl.addOnSuccessListener {
+                uri ->
+            Log.i("Test", "3")
+            val url = uri.toString()
+            println(url)
+            mediaAlarmPlayer.setDataSource(url)
+            mediaAlarmPlayer.setOnPreparedListener(this::onPrepared2)
+            mediaAlarmPlayer.prepare()
+
+        }.addOnFailureListener{}
+    }
     fun mpStop(){
         try {
-            mediaPlayer.stop()
-            mediaPlayer.release()
+            if(mediaPlayer.isPlaying()) {
+                mediaPlayer.reset()
+                mediaPlayer.stop()
+            }
+            if(mediaAlarmPlayer.isPlaying()) {
+                mediaAlarmPlayer.reset()
+                mediaAlarmPlayer.stop()
+            }
         }catch (e : IllegalStateException){
             println("test")
         }
     }
-
-    override fun onCompletion(mp: MediaPlayer?) {
-        val time =mediaPlayer.duration
-        playTime += time
+    fun onPrepared(mp: MediaPlayer){
+        mediaPlayer = mp
+        mediaPlayer.start()
+    }
+    fun onPrepared2(mp: MediaPlayer){
+        mediaAlarmPlayer = mp
+        mediaAlarmPlayer.start()
+    }
+    override fun onCompletion(mp: MediaPlayer) {
+        val time =mp.duration
+        playTime += time.toInt()
         calendar.timeInMillis = playTime.toLong()
         if(calendar.timeInMillis >= calendarTime.timeInMillis){
             mpStop()

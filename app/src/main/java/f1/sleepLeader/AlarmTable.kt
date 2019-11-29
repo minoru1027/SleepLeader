@@ -10,4 +10,5 @@ open class AlarmTable :RealmObject(){
     var snoozeFlag : String = ""
     var musicFlag : String = ""
     var musicPath : String = ""
+    var firebaseFlag : String = ""
 }
