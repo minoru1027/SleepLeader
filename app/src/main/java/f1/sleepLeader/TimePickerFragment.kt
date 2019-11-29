@@ -44,6 +44,7 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
         var tv : TextView = activity!!.findViewById<TextView>(R.id.timePicker)
         var hour = hourOfDay
         val zone = getAMPM(hourOfDay)
+        println(zone)
         if(zone.equals("PM")){
             hour += 12
         }
@@ -66,7 +67,6 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
     private fun getHourAMPM(hour:Int):Int{
         // Return the hour value for AM PM time format
         var modifiedHour = if (hour>11)hour-12 else hour
-        if (modifiedHour == 0){modifiedHour = 12}
         return modifiedHour
     }
 }

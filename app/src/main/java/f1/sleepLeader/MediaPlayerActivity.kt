@@ -19,13 +19,14 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
     private var calendar : Calendar = Calendar.getInstance()
     private var playTime : Int = 0
     private var calendarTime : Calendar = Calendar.getInstance()
-    private var alarmFlag :Boolean = false
     val storage = FirebaseStorage.getInstance()
     val storageRef = storage.reference
     companion object {
         @JvmField
         var mediaPlayer : MediaPlayer = MediaPlayer()
         var mediaAlarmPlayer : MediaPlayer = MediaPlayer()
+        var musicFlag = false
+        var alarmFlag = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -54,20 +55,21 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
                 mediaPlayer.setOnCompletionListener(this)
                 mediaPlayer.setOnPreparedListener(this::onPrepared)
                 mediaPlayer.prepare()
-                Thread.sleep(500)
-
-                if (mediaAlarmPlayer.isPlaying()) {
-                    mediaPlayer.reset()
-                }
+                alarm()
 
             }.addOnFailureListener {}
+    }
+    fun alarm(){
+        if(musicFlag){
+            mediaPlayer.reset()
+            mediaPlayer.stop()
+        }
     }
     fun mpStart(context: Context){
         try {
             mediaAlarmPlayer.setVolume(alarmVolume,alarmVolume)
             mediaAlarmPlayer.setOnCompletionListener(this)
             mediaAlarmPlayer.start()
-            alarmFlag = true
         }catch (e : IOException){
             Toast.makeText(context, "音楽処理時にエラー発生", Toast.LENGTH_LONG).show()
         }
@@ -81,6 +83,7 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
             val url = uri.toString()
             println(url)
             mediaAlarmPlayer.setDataSource(url)
+            mediaAlarmPlayer.setOnCompletionListener(this)
             mediaAlarmPlayer.setOnPreparedListener(this::onPrepared2)
             mediaAlarmPlayer.prepare()
 
@@ -92,13 +95,13 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
                 mediaPlayer.reset()
                 mediaPlayer.stop()
             }
-            if(mediaAlarmPlayer.isPlaying()) {
-                mediaAlarmPlayer.reset()
-                mediaAlarmPlayer.stop()
-            }
         }catch (e : IllegalStateException){
             println("test")
         }
+    }
+    fun bgStop(){
+            mediaAlarmPlayer.reset()
+            mediaAlarmPlayer.stop()
     }
     fun onPrepared(mp: MediaPlayer){
         mediaPlayer = mp
@@ -112,15 +115,17 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
         val time =mp.duration
         playTime += time.toInt()
         calendar.timeInMillis = playTime.toLong()
-        if(calendar.timeInMillis >= calendarTime.timeInMillis){
+        if(musicFlag){
+            musicFlag = true
+        }else if(calendar.timeInMillis >= calendarTime.timeInMillis){
             mpStop()
         }else {
             println("ループだよ")
             println(calendar.timeInMillis)
             if (alarmFlag) {
-                alarmVolume+=0.1f
+                alarmVolume += 0.1f
                 mpStart(this)
-            }else{
+            } else {
                 mpStart()
             }
         }
