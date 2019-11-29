@@ -22,8 +22,11 @@ class AlarmEditActivity : AppCompatActivity() {
 
     private lateinit var realm : Realm
     private var musicPath : String = ""
+    private var firebaseFlag = ""
     private var alarmRealm : Realm = Realm.getDefaultInstance()
     private var selectId : Long = 1
+    private var timeList : ArrayList<String> = arrayListOf()
+    private var boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +36,10 @@ class AlarmEditActivity : AppCompatActivity() {
 
         val musicList = realm.where<MusicTable>().findAll()
         val alarmList = alarmRealm.where<AlarmTable>().findAll()
+        for (id in 1..alarmList.size) {
+            val alarmId = realm.where<AlarmTable>().equalTo("alarmId", id).findFirst()
+            timeList.add(alarmId?.timer.toString())
+        }
 
         musicSpinner.adapter = musicAdapter(musicList)
         musicSpinner.visibility = View.GONE
@@ -80,7 +87,7 @@ class AlarmEditActivity : AppCompatActivity() {
 
                 val musicPosition = musicSpinner.getItemAtPosition(position) as MusicTable
                 musicPath = musicPosition.musicPath
-                println(musicPath)
+                firebaseFlag = musicPosition.firebaseFlag
 
             }
 
@@ -89,39 +96,52 @@ class AlarmEditActivity : AppCompatActivity() {
             }
         }
         AlarmSetting.setOnClickListener {
+            var time = timePicker.text.toString()
             try{
-                realm.executeTransaction {
-                    var alarm = realm.where<AlarmTable>().equalTo("alarmId",selectId).findFirst()
+                if(time.equals("起床時間を設定する")) {
+                    Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
+                }else {
+                    for (setTime in timeList) {
+                        if (time.equals(setTime)) {
+                            Toast.makeText(
+                                applicationContext,
+                                "同じ時間が既に登録されています",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            boolean = false
+                            break
+                   }
+              }
+        }
+                if (boolean) {
+                        realm.executeTransaction {
+                            var alarm = realm.where<AlarmTable>().equalTo("alarmId",selectId).findFirst()
+                            intent.putExtra("setTime", time)
+                            alarm?.timer = time
 
-                    //設定した時間
-                    var time = timePicker.text.toString()
+                            //スヌーズ設定
+                            var snooze = snoozeFlag.isChecked.toString()
+                            alarm?.snoozeFlag = snooze
 
-                    if(time.equals("起床時間を設定する")) {
-                        Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
-                        startActivity<AlarmSetActivity>()
-                    }else{
-                        intent.putExtra("setTime", time)
-                        alarm?.timer = time
+                            //音楽の再生設定
+                            var music = musicFlag.isChecked.toString()
+                            println(music)
+                            alarm?.musicFlag = music
 
-                        //スヌーズ設定
-                        var snooze = snoozeFlag.isChecked.toString()
-                        alarm?.snoozeFlag = snooze
+                            //音楽のファイルパス
+                            alarm?.musicPath = musicPath
+                            alarm?.firebaseFlag = firebaseFlag
 
-                        //音楽の再生設定
-                        var music = musicFlag.isChecked.toString()
-                        println(music)
-                        alarm?.musicFlag = music
-
-                        //音楽のファイルパス
-                        alarm?.musicPath = musicPath
-
-                        val timer = realm.where<AlarmTable>().equalTo("timer",time).findFirst()
-                        val intent = Intent(applicationContext, AlarmListActivity::class.java)
-                        Toast.makeText(applicationContext, "編集が終わったでー", Toast.LENGTH_LONG).show()
-                        startActivity(intent)
+                            val timer =
+                                realm.where<AlarmTable>().equalTo("timer", time).findFirst()
+                            val intent =
+                                Intent(applicationContext, AlarmListActivity::class.java)
+                            Toast.makeText(applicationContext, "編集が終わったでー", Toast.LENGTH_LONG)
+                                .show()
+                            startActivity(intent)
+                        }
                     }
-
-                }
+                boolean = true
             }catch (e: NullPointerException){
                 Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
                 startActivity<AlarmSetActivity>()

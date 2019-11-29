@@ -33,6 +33,7 @@ import kotlin.collections.HashMap
 
 class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.ActivityLifecycleCallbacks{
 
+    private lateinit var countDown : AlarmStopActivity.CountDown
     private lateinit var realm : Realm
     private lateinit var snoozeFlag : String
     private lateinit var musicFlag : String
@@ -241,7 +242,9 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         val intent = Intent(this,AlarmBroadcastReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         alarmManager.cancel(pendingIntent)
-
+        if(countDown != null){
+            countDown.cancel()
+        }
     }
 
     private fun setTimer(time : Date?){
@@ -306,7 +309,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         //表示するやつの更新頻度じゃい
         val interval: Long = 10
         //カウントダウンじゃい
-        var countDown = CountDown(countNumber, interval)
+        countDown = CountDown(countNumber, interval)
 
         setAlarmManager(calendar)
         countDown.start()
