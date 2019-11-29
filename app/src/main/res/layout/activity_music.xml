@@ -27,13 +27,15 @@
 
     <ListView
             android:id="@+id/musicListView"
-            android:layout_width="400dp"
+            android:layout_width="0dp"
             android:layout_height="300dp"
-            android:layout_marginTop="8dp"
-            android:scrollbars="vertical"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text1" />
+            app:layout_constraintTop_toBottomOf="@+id/text1">
+
+    </ListView>
 
     <TextView
             android:id="@+id/text2"
@@ -54,12 +56,15 @@
 
     <ListView
             android:id="@+id/musicAlarmListView"
-            android:layout_width="400dp"
+            android:layout_width="0dp"
             android:layout_height="300dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text2" />
+            app:layout_constraintTop_toBottomOf="@+id/text2">
+
+    </ListView>
 
     <Button
             android:id="@+id/button"
