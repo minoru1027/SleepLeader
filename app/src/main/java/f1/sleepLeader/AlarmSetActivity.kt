@@ -150,7 +150,6 @@ class AlarmSetActivity : AppCompatActivity() {
                     boolean = true
                 }catch (e:NullPointerException){
                     Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
-                    startActivity<AlarmSetActivity>()
                 }
             }
         }
