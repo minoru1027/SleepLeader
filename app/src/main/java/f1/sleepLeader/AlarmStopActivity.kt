@@ -238,12 +238,15 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         super.onBackPressed()
 
         mpStop()
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this,AlarmBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        alarmManager.cancel(pendingIntent)
-        if(countDown != null){
+        try {
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(this, AlarmBroadcastReceiver::class.java)
+            val pendingIntent =
+                PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            alarmManager.cancel(pendingIntent)
             countDown.cancel()
+        }catch (e:UninitializedPropertyAccessException){
+            println(e)
         }
     }
 

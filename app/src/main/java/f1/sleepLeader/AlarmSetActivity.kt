@@ -38,6 +38,7 @@ class AlarmSetActivity : AppCompatActivity() {
     private var alarmRealm : Realm = Realm.getDefaultInstance()
     private var timeList : ArrayList<String> = ArrayList()
     private var boolean : Boolean = true
+    private var setedTime = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +104,9 @@ class AlarmSetActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext, "時間が入力されていません", Toast.LENGTH_LONG).show()
                         boolean = false
                     }
+                }else if(time.equals(setedTime)){
+                    Toast.makeText(applicationContext, "同じ時間が既に登録されています", Toast.LENGTH_LONG).show()
+                    boolean = false
                 }else {
                     for(setTime in timeList) {
                         if (time.equals("起床時間を設定する")) {
@@ -124,6 +128,7 @@ class AlarmSetActivity : AppCompatActivity() {
 
                         intent.putExtra("setTime", time)
                         alarm.timer = time
+                        setedTime = time
                         //スヌーズ設定
                         var snooze = snoozeFlag.isChecked.toString()
                         alarm.snoozeFlag = snooze
