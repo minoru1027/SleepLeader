@@ -13,9 +13,9 @@ class MusicPlayActivity :MediaPlayerActivity(){
     private var firebaseFlag = ""
 
     public fun MusicStop(){
-        mpStop()
         musicFlag = true
         alarmFlag = true
+        alarm()
     }
     public fun AlarmMusicSet(res: Resources, context: Context){
 

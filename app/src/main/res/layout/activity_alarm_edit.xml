@@ -12,12 +12,12 @@
             android:id="@+id/AlarmSetting"
             android:layout_width="272dp"
             android:layout_height="53dp"
-            android:layout_marginTop="128dp"
+            android:layout_marginTop="140dp"
             android:background="@drawable/radius"
             android:text="設定"
             android:textColor="#fffaf0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.555"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/musicSpinner" />
 
@@ -25,37 +25,35 @@
             android:id="@+id/musicFlag"
             android:layout_width="65dp"
             android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginTop="12dp"
 
+            android:layout_marginEnd="50dp"
             android:textColor="#fffaf0"
             android:textColorHint="#fffaf0"
             android:theme="@style/CustomSwitch"
             app:layout_constraintEnd_toEndOf="parent"
+
+
             app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/snoozeFlag"
-
-
-            />
+            app:layout_constraintTop_toBottomOf="@+id/snoozeFlag" />
 
     <Spinner
             android:id="@+id/musicSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.793"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/musicFlag"
+            app:layout_constraintHorizontal_bias="0.787"
 
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/musicFlag" />
 
     <Switch
             android:id="@+id/snoozeFlag"
             android:layout_width="65dp"
             android:layout_height="40dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="124dp"
             android:layout_marginEnd="50dp"
 
             android:textColor="#fffaf0"
@@ -63,32 +61,30 @@
             android:theme="@style/CustomSwitch"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/スヌーズ"
-            app:layout_constraintTop_toBottomOf="@+id/timePicker"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/timePicker" />
 
     <TextView
             android:id="@+id/timePicker"
             android:layout_width="294dp"
             android:layout_height="68dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="116dp"
+            android:layout_marginTop="120dp"
             android:layout_marginEnd="10dp"
             android:gravity="center"
             android:text="起床時間を設定する"
             android:textColor="#fffaf0"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
             android:id="@+id/imageView"
             android:layout_width="43dp"
             android:layout_height="50dp"
             android:layout_marginStart="276dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="86dp"
             app:layout_constraintBottom_toTopOf="@+id/snoozeFlag"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@mipmap/touch" />
@@ -97,8 +93,8 @@
             android:id="@+id/スヌーズ"
             android:layout_width="79dp"
             android:layout_height="40dp"
-            android:layout_marginStart="197dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginStart="196dp"
+            android:layout_marginTop="124dp"
             android:gravity="center"
             android:text="スヌーズ"
             android:textColor="#fffaf0"
@@ -110,12 +106,43 @@
             android:id="@+id/textView2"
             android:layout_width="79dp"
             android:layout_height="40dp"
-            android:layout_marginStart="197dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="196dp"
+            android:layout_marginTop="13dp"
             android:gravity="center"
-            android:text="音楽不変"
+            android:text="音楽固定"
             android:textColor="#fffaf0"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/スヌーズ" />
+
+    <ImageView
+            android:id="@+id/shake"
+            android:layout_width="24dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/AlarmSetting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@mipmap/shake" />
+
+    <TextView
+            android:id="@+id/memo"
+            android:layout_width="wrap_content"
+            android:layout_height="29dp"
+            android:gravity="center"
+            android:text="アラームをセットしたら端末をシェイク"
+            android:textColor="#fffaf0"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="するだけで音楽を変更できます。"
+            android:textColor="#fffaf0"
+            app:layout_constraintBottom_toTopOf="@+id/shake"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -180,56 +180,66 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         switch2.setOnCheckedChangeListener { _, isChecked: Boolean ->
 
             if (isChecked) {
-                mpStop()
-                bgStop()
-                val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                val intent = Intent(this,AlarmBroadcastReceiver::class.java)
-                val pendingIntent = PendingIntent.getBroadcast(this, 9, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                alarmManager.cancel(pendingIntent)
-                if (snoozeFlag.equals("true")) {
-                    onSetSnooze()
-                    snoozeFlag = "false"
-                } else if (snoozeFlag.equals("false") && activityFlag.equals("0")) {
-                    startActivity<AlarmActivity>()
-                } else if (snoozeFlag.equals("false") && activityFlag.equals("1")) {
-                    if (timeCount + 1 > timeList.size) {
+                try {
+                    mpStop()
+                    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    val intent = Intent(this, AlarmBroadcastReceiver::class.java)
+                    val pendingIntent = PendingIntent.getBroadcast(
+                        this,
+                        9,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+                    alarmManager.cancel(pendingIntent)
+                    if (snoozeFlag.equals("true")) {
+                        onSetSnooze()
+                        snoozeFlag = "false"
+                    } else if (snoozeFlag.equals("false") && activityFlag.equals("0")) {
+                        countDown.cancel()
                         startActivity<AlarmActivity>()
-                    } else if (timeCount + 1 === timeList.size) {
-                        nextTimer.visibility = View.GONE
+                    } else if (snoozeFlag.equals("false") && activityFlag.equals("1")) {
+                        if (timeCount + 1 > timeList.size) {
+                            countDown.cancel()
+                            startActivity<AlarmActivity>()
+                        } else if (timeCount + 1 === timeList.size) {
+                            nextTimer.visibility = View.GONE
 
-                        AlarmTime.text = timeList[timeCount]
+                            AlarmTime.text = timeList[timeCount]
 
-                        setTimer(timeList[timeCount]?.toDate())
+                            setTimer(timeList[timeCount]?.toDate())
 
-                        val timeSet =
-                            realm.where<AlarmTable>().equalTo("timer", timeList[timeCount])
-                                .findFirst()
+                            val timeSet =
+                                realm.where<AlarmTable>().equalTo("timer", timeList[timeCount])
+                                    .findFirst()
 
-                        snoozeFlag = timeSet?.snoozeFlag.toString()
+                            snoozeFlag = timeSet?.snoozeFlag.toString()
 
-                        timeCount++
+                            timeCount++
 
 
-                    } else {
+                        } else {
 
-                        setTimer(timeList[timeCount]?.toDate())
+                            setTimer(timeList[timeCount]?.toDate())
 
-                        AlarmTime.text = timeList[timeCount]
-                        timeCount++
-                        nextTimer.text = timeList[timeCount]
+                            AlarmTime.text = timeList[timeCount]
+                            timeCount++
+                            nextTimer.text = timeList[timeCount]
 
-                        val timeSet =
-                            realm.where<AlarmTable>().equalTo("timer", timeList[timeCount])
-                                .findFirst()
+                            val timeSet =
+                                realm.where<AlarmTable>().equalTo("timer", timeList[timeCount])
+                                    .findFirst()
 
-                        snoozeFlag = timeSet?.snoozeFlag.toString()
+                            snoozeFlag = timeSet?.snoozeFlag.toString()
 
+                        }
                     }
-                }
-                Thread.sleep(100)
+                    Thread.sleep(100)
 
-                switch2.setChecked(false)
-            } else if (!isChecked) {
+                    switch2.setChecked(false)
+                } catch (e: UninitializedPropertyAccessException) {
+
+                }
+            }else if (!isChecked) {
             }
         }
     }
