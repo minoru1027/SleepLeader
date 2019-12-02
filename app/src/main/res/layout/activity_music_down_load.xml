@@ -34,19 +34,41 @@
                 android:layout_width="172dp"
                 android:layout_height="wrap_content"
 
+<<<<<<< HEAD
                 android:drawableLeft="@mipmap/moon"
                 android:text="就寝時に登録"
                 android:textColor="#fffaf0" />
 
         <RadioButton
                 android:id="@+id/morningbutton"
+=======
+            <RadioButton
+                    android:id="@+id/sleepbutton"
+                    android:layout_width="172dp"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="#fffaf0"
+                    android:drawableLeft="@mipmap/moon"
+                    android:text="就寝時に登録"
+                    android:textColor="#fffaf0" />
+>>>>>>> development
 
                 android:layout_width="292dp"
                 android:layout_height="71dp"
 
+<<<<<<< HEAD
                 android:drawableLeft="@mipmap/sun"
                 android:text="起床時に登録"
                 android:textColor="#fffaf0" />
+=======
+                    android:layout_width="172dp"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="#fffaf0"
+                    android:drawableLeft="@mipmap/sun"
+                    android:text="起床時に登録"
+                    android:textColor="#fffaf0" />
+
+        </LinearLayout>
+>>>>>>> development
 
     </RadioGroup>
 
