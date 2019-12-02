@@ -38,7 +38,7 @@
                     android:id="@+id/sleepbutton"
                     android:layout_width="172dp"
                     android:layout_height="wrap_content"
-
+                    android:buttonTint="#fffaf0"
                     android:drawableLeft="@mipmap/moon"
                     android:text="就寝時に登録"
                     android:textColor="#fffaf0" />
@@ -48,7 +48,7 @@
 
                     android:layout_width="172dp"
                     android:layout_height="wrap_content"
-
+                    android:buttonTint="#fffaf0"
                     android:drawableLeft="@mipmap/sun"
                     android:text="起床時に登録"
                     android:textColor="#fffaf0" />
