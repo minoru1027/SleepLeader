@@ -17,12 +17,12 @@
             android:drawableLeft="@mipmap/moon"
             android:fontFamily="sans-serif-light"
             android:gravity="left"
-            android:text=" Sleeping"
+            android:text="Night"
             android:textColor="#fffaf0"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
 
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
@@ -46,7 +46,7 @@
             android:drawableLeft="@mipmap/sun"
             android:fontFamily="sans-serif-light"
             android:gravity="left"
-            android:text="Getting up"
+            android:text="Morning"
             android:textColor="#fffaf0"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
