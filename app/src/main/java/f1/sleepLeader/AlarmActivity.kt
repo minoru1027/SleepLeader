@@ -36,8 +36,8 @@ class AlarmActivity : MediaPlayerActivity() {
         val firebaseFlag : Array<String> = arrayOf("OFF","OFF","OFF","OFF","OFF")
         when(musicid){
              null->{
-                 val musicName : Array<String> = arrayOf("雨漏り","夏の夜","雨","大きな波","虫のせせらぎ")
-                 val musicPath : Array<String> = arrayOf("amamori","natunoyoru","rain","sleep_wave","suzumushi")
+                 val musicName : Array<String> = arrayOf("焚火","水中","雨","大きな波","森林浴")
+                 val musicPath : Array<String> = arrayOf("fire","bubble","rain","sleep_wave","sinrinyoku")
 
                  var i = 0
                  while(i != musicName.size){
@@ -60,8 +60,8 @@ class AlarmActivity : MediaPlayerActivity() {
 
         when(musicAlarmId){
             null->{
-                val musicAlarmName : Array<String> = arrayOf("R18","鳥の声","朝食を作る","小鳥","小さい波")
-                val musicAlarmPath : Array<String> = arrayOf("kyuketu1","bird","breakfast","tyuntyun","wave")
+                val musicAlarmName : Array<String> = arrayOf("ニワトリ","朝食を作る","サイレン","小さい波","爆笑")
+                val musicAlarmPath : Array<String> = arrayOf("niwatori","breakfast","sairen","wave","bakusyou")
 
                 var i = 0
                 while(i != musicAlarmName.size){
