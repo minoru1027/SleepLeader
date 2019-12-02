@@ -6,7 +6,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/gradtion"
         tools:context=".MusicDownLoadActivity">
-
     <ListView
             android:id="@+id/listView"
             android:layout_width="410dp"
@@ -14,77 +13,42 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
-
-    </ListView>
-
+            app:layout_constraintTop_toTopOf="parent" />
     <RadioGroup
             android:id="@+id/selectRadio"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="351dp"
+            android:layout_height="43dp"
             android:layout_marginTop="32dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/listView">
-
         <RadioButton
                 android:id="@+id/sleepbutton"
                 android:layout_width="172dp"
                 android:layout_height="wrap_content"
-
-<<<<<<< HEAD
+                android:buttonTint="#fffaf0"
                 android:drawableLeft="@mipmap/moon"
                 android:text="就寝時に登録"
                 android:textColor="#fffaf0" />
-
         <RadioButton
                 android:id="@+id/morningbutton"
-=======
-            <RadioButton
-                    android:id="@+id/sleepbutton"
-                    android:layout_width="172dp"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="#fffaf0"
-                    android:drawableLeft="@mipmap/moon"
-                    android:text="就寝時に登録"
-                    android:textColor="#fffaf0" />
->>>>>>> development
-
-                android:layout_width="292dp"
-                android:layout_height="71dp"
-
-<<<<<<< HEAD
+                android:layout_width="172dp"
+                android:layout_height="wrap_content"
+                android:buttonTint="#fffaf0"
                 android:drawableLeft="@mipmap/sun"
                 android:text="起床時に登録"
                 android:textColor="#fffaf0" />
-=======
-                    android:layout_width="172dp"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="#fffaf0"
-                    android:drawableLeft="@mipmap/sun"
-                    android:text="起床時に登録"
-                    android:textColor="#fffaf0" />
-
-        </LinearLayout>
->>>>>>> development
-
     </RadioGroup>
-
     <Button
             android:id="@+id/insertButton"
-
             android:layout_width="242dp"
             android:layout_height="47dp"
-
-            android:layout_marginTop="160dp"
+            android:layout_marginTop="64dp"
             android:background="@drawable/radius"
             android:text="登録"
             android:textColor="#fffaf0"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectRadio" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
