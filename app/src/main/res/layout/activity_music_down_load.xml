@@ -23,37 +23,29 @@
             android:layout_height="43dp"
 
             android:layout_marginTop="32dp"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/listView">
 
-        <LinearLayout
-
-                android:layout_width="349dp"
-
+        <RadioButton
+                android:id="@+id/sleepbutton"
+                android:layout_width="172dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:buttonTint="#fffaf0"
+                android:drawableLeft="@mipmap/moon"
+                android:text="就寝時に登録"
+                android:textColor="#fffaf0" />
 
-            <RadioButton
-                    android:id="@+id/sleepbutton"
-                    android:layout_width="172dp"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="#fffaf0"
-                    android:drawableLeft="@mipmap/moon"
-                    android:text="就寝時に登録"
-                    android:textColor="#fffaf0" />
+        <RadioButton
+                android:id="@+id/morningbutton"
 
-            <RadioButton
-                    android:id="@+id/morningbutton"
-
-                    android:layout_width="172dp"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="#fffaf0"
-                    android:drawableLeft="@mipmap/sun"
-                    android:text="起床時に登録"
-                    android:textColor="#fffaf0" />
-
-        </LinearLayout>
+                android:layout_width="172dp"
+                android:layout_height="wrap_content"
+                android:buttonTint="#fffaf0"
+                android:drawableLeft="@mipmap/sun"
+                android:text="起床時に登録"
+                android:textColor="#fffaf0" />
 
     </RadioGroup>
 
