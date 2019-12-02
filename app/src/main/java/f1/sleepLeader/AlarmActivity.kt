@@ -13,7 +13,7 @@ import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 
-class AlarmActivity : AppCompatActivity() {
+class AlarmActivity : MediaPlayerActivity() {
 
     private lateinit var musicRealm : Realm
     private lateinit var musicAlarmRealm : Realm
@@ -24,6 +24,8 @@ class AlarmActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        musicFlag = false
+        alarmFlag = false
         musicRealm = Realm.getDefaultInstance()
         musicAlarmRealm = Realm.getDefaultInstance()
 

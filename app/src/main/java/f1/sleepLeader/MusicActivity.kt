@@ -42,7 +42,7 @@ class MusicActivity : MediaPlayerActivity(){
         }
         musicListView.setOnItemClickListener{ parent, view, position, id ->
             val musicListPosition = parent.getItemAtPosition(position) as MusicTable
-
+            alarmFlag = true
             if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()&&name.equals(musicListPosition.musicName)){
                 mpStop()
                 name = ""
@@ -59,16 +59,14 @@ class MusicActivity : MediaPlayerActivity(){
                         this.packageName
                     )
                     name = musicListPosition.musicName
-                    mediaPlayer = MediaPlayer.create(this, soundId)
-                    mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                    mpStart()
+                    mediaAlarmPlayer = MediaPlayer.create(this, soundId)
+                    mediaAlarmPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                    mpStart(this)
                 }
             }else if (musicListPosition.firebaseFlag.equals("ON")) {
-                mediaPlayer.reset()
                 mpStart(musicListPosition.musicPath)
                 name = musicListPosition.musicName
-                } else {
-                     mediaPlayer.reset()
+            }else {
                     val res = this.resources
                     var soundId = res.getIdentifier(
                         musicListPosition.musicPath,
@@ -76,11 +74,13 @@ class MusicActivity : MediaPlayerActivity(){
                         this.packageName
                     )
                     name = musicListPosition.musicName
-                    mediaPlayer = MediaPlayer.create(this, soundId)
-                    mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                    mpStart()
-                }
+                    mediaAlarmPlayer = MediaPlayer.create(this, soundId)
+                    mediaAlarmPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                    mpStart(this)
+            }
         }
+
+
         musicAlarmListView.setOnItemClickListener{ parent, view, position, id ->
             val musicAlarmListPosition = parent.getItemAtPosition(position) as MusicAlarmTable
             alarmFlag = true
@@ -90,8 +90,9 @@ class MusicActivity : MediaPlayerActivity(){
             }else if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()){
                 mpStop()
                 if(musicAlarmListPosition.firebaseAlarmFlag.equals("ON")){
-                    mpStart(musicAlarmListPosition.musicAlarmPath)
+                    mpStart(this,musicAlarmListPosition.musicAlarmPath)
                     name = musicAlarmListPosition.musicAlarmName
+
                 }else {
                     val res = this.resources
                     var soundId = res.getIdentifier(
@@ -105,11 +106,9 @@ class MusicActivity : MediaPlayerActivity(){
                     mpStart(this)
                 }
             }else if(musicAlarmListPosition.firebaseAlarmFlag.equals("ON")){
-                mediaAlarmPlayer.reset()
                 mpStart(musicAlarmListPosition.musicAlarmPath)
                 name = musicAlarmListPosition.musicAlarmName
             }else {
-                mediaAlarmPlayer.reset()
                 val res = this.resources
                 var soundId = res.getIdentifier(musicAlarmListPosition.musicAlarmPath,"raw",this.packageName)
                 name = musicAlarmListPosition.musicAlarmName
@@ -124,7 +123,6 @@ class MusicActivity : MediaPlayerActivity(){
         super.onStop()
         try {
             mpStop()
-            musicFlag = false
         }catch (e : IllegalStateException){
             println(e)
         }catch (e: RuntimeException){

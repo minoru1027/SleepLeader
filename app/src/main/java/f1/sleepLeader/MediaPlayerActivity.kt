@@ -17,8 +17,11 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
     private var volume : Float = 0.7f
     private var alarmVolume : Float = 0.4f
     private var calendar : Calendar = Calendar.getInstance()
-    private var playTime : Int = 0
+    private var playTime : Long = 0
+    private var bgplayTime : Long = 0
+    private var limitTime : Long = 1800000
     private var calendarTime : Calendar = Calendar.getInstance()
+    private var firebaseFlag = "OFF"
     val storage = FirebaseStorage.getInstance()
     val storageRef = storage.reference
     companion object {
@@ -31,38 +34,18 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
-        calendarTime.timeInMillis = 1800000
+
     }
     fun mpStart(){
         try {
-            mediaPlayer.setVolume(volume,volume)
-            mediaPlayer.setOnCompletionListener(this)
-            mediaPlayer.start()
+            if(musicFlag == false) {
+                mediaPlayer.setVolume(volume, volume)
+                mediaPlayer.setOnCompletionListener(this)
+                println("test")
+                mediaPlayer.start()
+            }
         }catch (e : IOException){
             Toast.makeText(this, "音楽処理時にエラー発生", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    fun mpStart(musicPath : String){
-            val path = "Music/" + musicPath
-            val dir = storageRef.child(path.trim())
-
-            dir.downloadUrl.addOnSuccessListener { uri ->
-                Log.i("Test", "3")
-                val url = uri.toString()
-                println(uri)
-                mediaPlayer.setDataSource(url)
-                mediaPlayer.setOnCompletionListener(this)
-                mediaPlayer.setOnPreparedListener(this::onPrepared)
-                mediaPlayer.prepare()
-                alarm()
-
-            }.addOnFailureListener {}
-    }
-    fun alarm(){
-        if(musicFlag){
-            mediaPlayer.reset()
-            mediaPlayer.stop()
         }
     }
     fun mpStart(context: Context){
@@ -70,24 +53,57 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
             mediaAlarmPlayer.setVolume(alarmVolume,alarmVolume)
             mediaAlarmPlayer.setOnCompletionListener(this)
             mediaAlarmPlayer.start()
+
         }catch (e : IOException){
             Toast.makeText(context, "音楽処理時にエラー発生", Toast.LENGTH_LONG).show()
+        }
+    }
+    fun mpStart(musicPath : String){
+            val path = "Music/" + musicPath
+            val dir = storageRef.child(path.trim())
+            try {
+                dir.downloadUrl.addOnSuccessListener { uri ->
+                    Log.i("Test", "3")
+                    val url = uri.toString()
+                    println(uri)
+                    mediaPlayer.setDataSource(url)
+                    mediaPlayer.setOnCompletionListener(this)
+                    mediaPlayer.setOnPreparedListener(this::onPrepared)
+                    mediaPlayer.prepare()
+                    alarm()
+
+                }.addOnFailureListener {}
+            }catch (e:IllegalStateException){
+
+            }
+    }
+    fun alarm(){
+        if(musicFlag){
+            mediaPlayer.reset()
+            mediaPlayer.stop()
+        }
+        if(mediaAlarmPlayer.isPlaying()){
+
+        }else{
+            mediaAlarmPlayer.start()
         }
     }
     fun mpStart(context: Context,musicPath: String){
         val path = "Music/"+musicPath
         val dir = storageRef.child(path.trim())
-        dir.downloadUrl.addOnSuccessListener {
-                uri ->
-            Log.i("Test", "3")
-            val url = uri.toString()
-            println(url)
-            mediaAlarmPlayer.setDataSource(url)
-            mediaAlarmPlayer.setOnCompletionListener(this)
-            mediaAlarmPlayer.setOnPreparedListener(this::onPrepared2)
-            mediaAlarmPlayer.prepare()
+        try {
+            dir.downloadUrl.addOnSuccessListener { uri ->
+                Log.i("Test", "3")
+                val url = uri.toString()
+                println(url)
+                mediaAlarmPlayer.setDataSource(url)
+                mediaAlarmPlayer.setOnCompletionListener(this)
+                mediaAlarmPlayer.setOnPreparedListener(this::onPrepared2)
+                mediaAlarmPlayer.prepare()
+            }.addOnFailureListener {}
+        }catch (e:IllegalStateException){
 
-        }.addOnFailureListener{}
+        }
     }
     fun mpStop(){
         try {
@@ -95,13 +111,13 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
                 mediaPlayer.reset()
                 mediaPlayer.stop()
             }
+            if(mediaAlarmPlayer.isPlaying()){
+                mediaAlarmPlayer.reset()
+                mediaAlarmPlayer.stop()
+            }
         }catch (e : IllegalStateException){
             println("test")
         }
-    }
-    fun bgStop(){
-            mediaAlarmPlayer.reset()
-            mediaAlarmPlayer.stop()
     }
     fun onPrepared(mp: MediaPlayer){
         mediaPlayer = mp
@@ -112,20 +128,18 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
         mediaAlarmPlayer.start()
     }
     override fun onCompletion(mp: MediaPlayer) {
-        val time =mp.duration
-        playTime += time.toInt()
-        calendar.timeInMillis = playTime.toLong()
-        if(musicFlag){
-            musicFlag = true
-        }else if(calendar.timeInMillis >= calendarTime.timeInMillis){
+        if(playTime >= limitTime || bgplayTime >= limitTime){
+            println("bbb")
+            playTime =0
             mpStop()
         }else {
             println("ループだよ")
-            println(calendar.timeInMillis)
-            if (alarmFlag) {
+            if(alarmFlag){
+                println("ddd")
                 alarmVolume += 0.1f
                 mpStart(this)
-            } else {
+            }else if(alarmFlag == false || musicFlag == false) {
+                println("ccc")
                 mpStart()
             }
         }
