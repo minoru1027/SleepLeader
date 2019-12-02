@@ -37,11 +37,9 @@ class MusicListAdapter (context : Context,MusicNameList: List<FireBaseData>) : A
         viewHolder.musicName.text = musicList.musicName
         viewHolder.musicPath = musicList.musicPath
         //Listの文字色
-        viewHolder.musicName.setTextColor(Color.rgb(255, 0, 0))
-        //Listの文字サイズ
-        viewHolder.musicName.textSize = 10F
-        //List中央揃え
-        viewHolder.musicName.gravity = Gravity.CENTER
+        viewHolder.musicName.setTextColor(Color.rgb(211,211,211))
+        viewHolder.musicName.gravity= Gravity.CENTER
+        viewHolder.musicName.textSize = 20F
         return view
     }
 }
