@@ -6,22 +6,18 @@
         android:layout_height="match_parent"
         android:background="@drawable/gradtion"
         tools:context=".MusicDownLoadActivity">
-
     <ListView
             android:id="@+id/listView"
-            android:layout_width="410dp"
+            android:layout_width="0dp"
             android:layout_height="384dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     <RadioGroup
             android:id="@+id/selectRadio"
-
             android:layout_width="351dp"
             android:layout_height="43dp"
-
             android:layout_marginTop="32dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,10 +32,9 @@
                 android:drawableLeft="@mipmap/moon"
                 android:text="就寝時に登録"
                 android:textColor="#fffaf0" />
-
+      
         <RadioButton
                 android:id="@+id/morningbutton"
-
                 android:layout_width="172dp"
                 android:layout_height="wrap_content"
                 android:buttonTint="#fffaf0"
@@ -48,13 +43,10 @@
                 android:textColor="#fffaf0" />
 
     </RadioGroup>
-
     <Button
             android:id="@+id/insertButton"
-
             android:layout_width="242dp"
             android:layout_height="47dp"
-
             android:layout_marginTop="64dp"
             android:background="@drawable/radius"
             android:text="登録"
