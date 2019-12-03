@@ -14,10 +14,8 @@ import java.lang.RuntimeException
 
 class MusicActivity : MediaPlayerActivity(){
 
-    private lateinit var player: MediaPlayer
     private lateinit var musicRealm: Realm
     private lateinit var musicAlarmRealm: Realm
-    private var sId : Int = 0
     private var name = ""
     private var musicFlag = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +27,6 @@ class MusicActivity : MediaPlayerActivity(){
 
         val musicList = musicRealm.where<MusicTable>().findAll()
         val musicAlarmList = musicAlarmRealm.where<MusicAlarmTable>().findAll()
-
         musicListView.adapter = musicAdapter(musicList)
         musicAlarmListView.adapter = musicAlarmAdapter(musicAlarmList)
 
@@ -45,11 +42,14 @@ class MusicActivity : MediaPlayerActivity(){
             alarmFlag = true
             if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()&&name.equals(musicListPosition.musicName)){
                 mpStop()
+                playTime = 0
                 name = ""
             }else if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()){
                 mpStop()
+                playTime = 0
                 if(musicListPosition.firebaseFlag.equals("ON")){
                     name = musicListPosition.musicName
+                    bgplayTime += musicListPosition.playTime
                     mpStart(musicListPosition.musicPath)
                 }else {
                     val res = this.resources
@@ -59,12 +59,14 @@ class MusicActivity : MediaPlayerActivity(){
                         this.packageName
                     )
                     name = musicListPosition.musicName
+                    bgplayTime += musicListPosition.playTime
                     mediaAlarmPlayer = MediaPlayer.create(this, soundId)
                     mediaAlarmPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
                     mpStart(this)
                 }
             }else if (musicListPosition.firebaseFlag.equals("ON")) {
                 mpStart(musicListPosition.musicPath)
+                bgplayTime += musicListPosition.playTime
                 name = musicListPosition.musicName
             }else {
                     val res = this.resources
@@ -74,6 +76,7 @@ class MusicActivity : MediaPlayerActivity(){
                         this.packageName
                     )
                     name = musicListPosition.musicName
+                    bgplayTime += musicListPosition.playTime
                     mediaAlarmPlayer = MediaPlayer.create(this, soundId)
                     mediaAlarmPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
                     mpStart(this)
@@ -86,11 +89,14 @@ class MusicActivity : MediaPlayerActivity(){
             alarmFlag = true
             if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()&&name.equals(musicAlarmListPosition.musicAlarmName)){
                 mpStop()
+                playTime = 0
                 name =""
             }else if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()){
                 mpStop()
+                playTime = 0
                 if(musicAlarmListPosition.firebaseAlarmFlag.equals("ON")){
                     mpStart(this,musicAlarmListPosition.musicAlarmPath)
+                    bgplayTime += musicAlarmListPosition.playAlarmTime
                     name = musicAlarmListPosition.musicAlarmName
 
                 }else {
@@ -101,16 +107,19 @@ class MusicActivity : MediaPlayerActivity(){
                         this.packageName
                     )
                     name = musicAlarmListPosition.musicAlarmName
+                    bgplayTime += musicAlarmListPosition.playAlarmTime
                     mediaAlarmPlayer = MediaPlayer.create(this, soundId)
                     mediaAlarmPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
                     mpStart(this)
                 }
             }else if(musicAlarmListPosition.firebaseAlarmFlag.equals("ON")){
                 mpStart(musicAlarmListPosition.musicAlarmPath)
+                bgplayTime += musicAlarmListPosition.playAlarmTime
                 name = musicAlarmListPosition.musicAlarmName
             }else {
                 val res = this.resources
                 var soundId = res.getIdentifier(musicAlarmListPosition.musicAlarmPath,"raw",this.packageName)
+                bgplayTime += musicAlarmListPosition.playAlarmTime
                 name = musicAlarmListPosition.musicAlarmName
                 mediaAlarmPlayer = MediaPlayer.create(this, soundId)
                 mediaAlarmPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)

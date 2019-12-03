@@ -15,6 +15,7 @@ class musicAdapter(data : OrderedRealmCollection<MusicTable>?) : RealmBaseAdapte
         var id:Long = 0
         var musicName = cell.findViewById<TextView>(android.R.id.text1)
         var musicPath = ""
+        var playTime : Long = 0
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -39,6 +40,7 @@ class musicAdapter(data : OrderedRealmCollection<MusicTable>?) : RealmBaseAdapte
             viewHolder.id = musicTable.musicId
             viewHolder.musicName.text = musicTable.musicName
             viewHolder.musicPath = musicTable.musicPath
+            viewHolder.playTime = musicTable.playTime
             viewHolder.musicName.setTextColor(Color.rgb(211,211,211))
             viewHolder.musicName.gravity= Gravity.CENTER
             viewHolder.musicName.textSize = 20F

@@ -17,8 +17,6 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
     private var volume : Float = 0.7f
     private var alarmVolume : Float = 0.4f
     private var calendar : Calendar = Calendar.getInstance()
-    private var playTime : Long = 0
-    private var bgplayTime : Long = 0
     private var limitTime : Long = 1800000
     private var calendarTime : Calendar = Calendar.getInstance()
     private var firebaseFlag = "OFF"
@@ -26,6 +24,8 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
     val storageRef = storage.reference
     companion object {
         @JvmField
+        var playTime : Long = 0
+        var bgplayTime : Long = 0
         var mediaPlayer : MediaPlayer = MediaPlayer()
         var mediaAlarmPlayer : MediaPlayer = MediaPlayer()
         var musicFlag = false
@@ -128,17 +128,21 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
         mediaAlarmPlayer.start()
     }
     override fun onCompletion(mp: MediaPlayer) {
-        if(playTime >= limitTime || bgplayTime >= limitTime){
+        println(playTime)
+        if(playTime >= limitTime){
             println("bbb")
             playTime =0
+            bgplayTime = 0
             mpStop()
         }else {
             println("ループだよ")
             if(alarmFlag){
+                playTime += bgplayTime
                 println("ddd")
                 alarmVolume += 0.1f
                 mpStart(this)
             }else if(alarmFlag == false || musicFlag == false) {
+                playTime += playTime
                 println("ccc")
                 mpStart()
             }
