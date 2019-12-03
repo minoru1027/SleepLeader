@@ -14,6 +14,7 @@ class musicAlarmAdapter(data : OrderedRealmCollection<MusicAlarmTable>?) : Realm
         var id:Long = 0
         var musicName = cell.findViewById<TextView>(android.R.id.text1)
         var musicPath = ""
+        var playAlarmTime : Long = 0
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -38,6 +39,7 @@ class musicAlarmAdapter(data : OrderedRealmCollection<MusicAlarmTable>?) : Realm
             viewHolder.id = musicTable.musicAlarmId
             viewHolder.musicName.text = musicTable.musicAlarmName
             viewHolder.musicPath = musicTable.musicAlarmPath
+            viewHolder.playAlarmTime = musicTable.playAlarmTime
             viewHolder.musicName.setTextColor(Color.rgb(211,211,211))
             viewHolder.musicName.gravity= Gravity.CENTER
             viewHolder.musicName.textSize = 20F

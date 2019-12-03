@@ -38,7 +38,7 @@ class AlarmActivity : MediaPlayerActivity() {
              null->{
                  val musicName : Array<String> = arrayOf("焚火","水中","雨","大きな波","森林浴")
                  val musicPath : Array<String> = arrayOf("fire","bubble","rain","sleep_wave","sinrinyoku")
-
+                 val playTime : Array<Long> = arrayOf(14000,10000,59000,121000,164000)
                  var i = 0
                  while(i != musicName.size){
                      if(i == musicName.size){
@@ -50,6 +50,7 @@ class AlarmActivity : MediaPlayerActivity() {
                             var music = musicRealm.createObject<MusicTable>(nextId)
                             music.musicName = musicName[i]
                             music.musicPath = musicPath[i]
+                             music.playTime = playTime[i]
                              music.firebaseFlag = firebaseFlag[i]
                              i++
                         }
@@ -62,7 +63,7 @@ class AlarmActivity : MediaPlayerActivity() {
             null->{
                 val musicAlarmName : Array<String> = arrayOf("ニワトリ","朝食を作る","サイレン","小さい波","爆笑")
                 val musicAlarmPath : Array<String> = arrayOf("niwatori","breakfast","sairen","wave","bakusyou")
-
+                val playAlarmTime : Array<Long> = arrayOf(2000,32000,4000,10000,6000)
                 var i = 0
                 while(i != musicAlarmName.size){
                     if(i == musicAlarmName.size){
@@ -74,6 +75,7 @@ class AlarmActivity : MediaPlayerActivity() {
                             var music = musicAlarmRealm.createObject<MusicAlarmTable>(nextId)
                             music.musicAlarmName = musicAlarmName[i]
                             music.musicAlarmPath = musicAlarmPath[i]
+                            music.playAlarmTime = playAlarmTime[i]
                             music.firebaseAlarmFlag = firebaseFlag[i]
                             i++
                         }

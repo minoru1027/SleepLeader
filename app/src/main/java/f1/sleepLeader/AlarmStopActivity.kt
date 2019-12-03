@@ -35,8 +35,10 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
     private lateinit var countDown : AlarmStopActivity.CountDown
     private lateinit var realm : Realm
+    private var musicRealm : Realm = Realm.getDefaultInstance()
     private lateinit var snoozeFlag : String
     private lateinit var musicFlag : String
+    private var pTime : Long = 0
     private var activityFlag = ""
     private var musicPath = ""
     private var firebaseFlag = ""
@@ -157,6 +159,9 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         if(firebaseFlag.equals("ON")) {
             mpStart(musicPath)
         }else {
+            val time = musicRealm.where<MusicTable>().equalTo("musicPath",musicPath).findFirst()
+            bgplayTime += time?.playTime!!.toLong()
+            playTime += bgplayTime
             val res = this.resources
             var soundId = res.getIdentifier(musicPath, "raw", this.packageName)
             mediaPlayer = MediaPlayer.create(this, soundId)
@@ -195,11 +200,11 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                         onSetSnooze()
                         snoozeFlag = "false"
                     } else if (snoozeFlag.equals("false") && activityFlag.equals("0")) {
-                        countDown.cancel()
+                        //countDown.cancel()
                         startActivity<AlarmActivity>()
                     } else if (snoozeFlag.equals("false") && activityFlag.equals("1")) {
                         if (timeCount + 1 > timeList.size) {
-                            countDown.cancel()
+                           // countDown.cancel()
                             startActivity<AlarmActivity>()
                         } else if (timeCount + 1 === timeList.size) {
                             nextTimer.visibility = View.GONE
@@ -225,9 +230,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                             timeCount++
                             nextTimer.text = timeList[timeCount]
 
-                            val timeSet =
-                                realm.where<AlarmTable>().equalTo("timer", timeList[timeCount])
-                                    .findFirst()
+                            val timeSet = realm.where<AlarmTable>().equalTo("timer", timeList[timeCount]).findFirst()
 
                             snoozeFlag = timeSet?.snoozeFlag.toString()
 
@@ -237,7 +240,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
                     switch2.setChecked(false)
                 } catch (e: UninitializedPropertyAccessException) {
-
+                    startActivity<AlarmActivity>()
                 }
             }else if (!isChecked) {
             }
@@ -494,6 +497,10 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                             if(firebaseFlag.equals("ON")) {
                                 mpStart(musicPath)
                             }else {
+                                val time = musicRealm.where<MusicTable>().equalTo("musicPath",musicPath).findFirst()
+                                bgplayTime+= time?.playTime!!.toLong()
+                                playTime += bgplayTime
+
                                 val res = this.resources
                                 var soundId = res.getIdentifier(musicPath, "raw", this.packageName)
                                 mediaPlayer = MediaPlayer.create(this, soundId)

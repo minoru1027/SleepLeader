@@ -15,11 +15,16 @@ class MusicPlayActivity :MediaPlayerActivity(){
     public fun MusicStop(){
         musicFlag = true
         alarmFlag = true
+        playTime = 0
+        bgplayTime = 0
         alarm()
     }
     public fun AlarmMusicSet(res: Resources, context: Context){
 
         val musicAlarmPath = MusicAlarmRandom()
+        val time = alarmRealm.where<MusicAlarmTable>().equalTo("musicAlarmPath",musicAlarmPath).findFirst()
+        bgplayTime += time?.playAlarmTime!!.toLong()
+        playTime += bgplayTime
         if(firebaseFlag.equals("ON")){
             mpStart(context,musicAlarmPath)
         }else {

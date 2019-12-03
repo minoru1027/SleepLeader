@@ -14,6 +14,7 @@ class MusicListAdapter (context : Context,MusicNameList: List<FireBaseData>) : A
     inner class ViewHolder(cell: View) {
         val musicName = cell.findViewById<TextView>(android.R.id.text1)
         var musicPath: String = ""
+        var musicTime : Long = 0
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -36,6 +37,7 @@ class MusicListAdapter (context : Context,MusicNameList: List<FireBaseData>) : A
         val musicList = getItem(position) as FireBaseData
         viewHolder.musicName.text = musicList.musicName
         viewHolder.musicPath = musicList.musicPath
+        viewHolder.musicTime = musicList.musicTime
         //Listの文字色
         viewHolder.musicName.setTextColor(Color.rgb(211,211,211))
         viewHolder.musicName.gravity= Gravity.CENTER
