@@ -26,6 +26,7 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
         @JvmField
         var playTime : Long = 0
         var bgplayTime : Long = 0
+        var setedAlarmPath : String = ""
         var mediaPlayer : MediaPlayer = MediaPlayer()
         var mediaAlarmPlayer : MediaPlayer = MediaPlayer()
         var musicFlag = false
@@ -142,7 +143,7 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
                 alarmVolume += 0.1f
                 mpStart(this)
             }else if(alarmFlag == false || musicFlag == false) {
-                playTime += playTime
+                playTime += bgplayTime
                 println("ccc")
                 mpStart()
             }

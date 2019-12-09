@@ -71,7 +71,7 @@ class AlarmListActivity : AppCompatActivity() {
 
         alarmStopButtom.setOnClickListener{
             if(timerList.size === 0) {
-                Toast.makeText(this, "何もセットしてへんやん", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "何もセットしてないです", Toast.LENGTH_LONG).show()
             } else {
                 startActivity<AlarmStopActivity>("timerList" to timerList, "activityFlag" to "1")
             }
@@ -118,8 +118,10 @@ class AlarmListActivity : AppCompatActivity() {
 
         if(alarmId != null){
             if(timerList.get(alarmId)==timer){
+                Toast.makeText(this, "解除", Toast.LENGTH_LONG).show()
                  timerList.remove(alarmId)
             }else{
+                Toast.makeText(this, "登録", Toast.LENGTH_LONG).show()
                 timerList.put(alarmId,timer)
             }
         }
