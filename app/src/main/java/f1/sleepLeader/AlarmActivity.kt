@@ -24,6 +24,8 @@ class AlarmActivity : MediaPlayerActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        playTime = 0
+        bgplayTime = 0
         musicFlag = false
         alarmFlag = false
         musicRealm = Realm.getDefaultInstance()

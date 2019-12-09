@@ -42,7 +42,9 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
     private var activityFlag = ""
     private var musicPath = ""
     private var firebaseFlag = ""
+    private var endFlag : Boolean = false
     private var snoozeSetFlag :Boolean  = false
+    private var nextTimeFlag : Boolean = false
     private var timerList : HashMap<Long,String> = hashMapOf()
     private var timeList  : ArrayList<String> = arrayListOf()
     private var calendarList : ArrayList<Long> = arrayListOf()
@@ -50,6 +52,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
     private var calendar : Calendar = Calendar.getInstance()
     private var sortTime : String = ""
     private var sortCalendar : Long = 0
+    private var snoozeCalendar : Calendar = Calendar.getInstance()
     private var calendarSet : Calendar = Calendar.getInstance()
     private var calendarNow : Calendar = Calendar.getInstance()
     var year = calendarSet.get(Calendar.YEAR)
@@ -156,6 +159,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         if(musicFlag.equals("false")){
             musicPath = MusicRandom()
         }
+        setedAlarmPath = musicPath
         if(firebaseFlag.equals("ON")) {
             mpStart(musicPath)
         }else {
@@ -187,6 +191,12 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
             if (isChecked) {
                 try {
                     mpStop()
+                    playTime = 0
+                    bgplayTime = 0
+                    if(snoozeSetFlag){
+                        snoozeSetFlag = false
+                        countDown.cancel()
+                    }
                     val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
                     val intent = Intent(this, AlarmBroadcastReceiver::class.java)
                     val pendingIntent = PendingIntent.getBroadcast(
@@ -200,18 +210,16 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                         onSetSnooze()
                         snoozeFlag = "false"
                     } else if (snoozeFlag.equals("false") && activityFlag.equals("0")) {
-                        //countDown.cancel()
                         startActivity<AlarmActivity>()
                     } else if (snoozeFlag.equals("false") && activityFlag.equals("1")) {
                         if (timeCount + 1 > timeList.size) {
-                           // countDown.cancel()
                             startActivity<AlarmActivity>()
                         } else if (timeCount + 1 === timeList.size) {
                             nextTimer.visibility = View.GONE
 
-                            AlarmTime.text = timeList[timeCount]
-
                             setTimer(timeList[timeCount]?.toDate())
+
+                            AlarmTime.text = timeList[timeCount]
 
                             val timeSet =
                                 realm.where<AlarmTable>().equalTo("timer", timeList[timeCount])
@@ -223,13 +231,11 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
 
                         } else {
-
+                            nextTimer.visibility = View.VISIBLE
                             setTimer(timeList[timeCount]?.toDate())
-
                             AlarmTime.text = timeList[timeCount]
                             timeCount++
                             nextTimer.text = timeList[timeCount]
-
                             val timeSet = realm.where<AlarmTable>().equalTo("timer", timeList[timeCount]).findFirst()
 
                             snoozeFlag = timeSet?.snoozeFlag.toString()
@@ -237,7 +243,6 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                         }
                     }
                     Thread.sleep(100)
-
                     switch2.setChecked(false)
                 } catch (e: UninitializedPropertyAccessException) {
                     startActivity<AlarmActivity>()
@@ -252,6 +257,8 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
         mpStop()
         try {
+            playTime =  0
+            bgplayTime = 0
             val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(this, AlarmBroadcastReceiver::class.java)
             val pendingIntent =
@@ -269,7 +276,6 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         calendarSet.set(Calendar.YEAR,year)
         calendarSet.set(Calendar.MONTH,month)
         calendarSet.set(Calendar.DATE,date)
-
         if(calendar.timeInMillis < calendarNow.timeInMillis){
             calendar.add(Calendar.DAY_OF_MONTH+1,1)
         }
@@ -307,12 +313,16 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         AlarmTime.setText(dataFormat.format(0))
         nextTimer.visibility = View.GONE
         snoozeSetFlag = true
-
+        nextTimeFlag = true
         var calendar: Calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR,year)
+        snoozeCalendar.set(Calendar.YEAR,year)
         calendar.set(Calendar.MONTH,month)
+        snoozeCalendar.set(Calendar.MONTH,month)
         calendar.set(Calendar.DATE,date)
+        snoozeCalendar.set(Calendar.DATE,date)
         calendar.add(Calendar.MINUTE,5)
+        snoozeCalendar.add(Calendar.MINUTE,5)
         //初期値じゃい
         var cale :Calendar = Calendar.getInstance()
         cale.set(Calendar.YEAR,year)
@@ -336,8 +346,8 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
         override fun onFinish() {
             // 完了
-
-            Toast.makeText(applicationContext, "(*´ω｀*)", Toast.LENGTH_LONG).show()
+            snoozeSetFlag = false
+            Toast.makeText(applicationContext, "スヌーズが鳴りました", Toast.LENGTH_LONG).show()
         }
 
         // インターバルで呼ばれる
@@ -362,6 +372,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         }
         val musicId = realm.where<MusicTable>().equalTo("musicId",pathId).findFirst()
         val musicPath = musicId?.musicPath.toString()
+        setedAlarmPath = musicPath
         firebaseFlag = musicId?.firebaseFlag.toString()
 
         return musicPath
@@ -488,7 +499,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                         shakeCount = 0F
 
                         // シャッフル
-                        if(snoozeSetFlag) {
+                        if(snoozeSetFlag || alarmFlag || musicFlag.equals("true")) {
 
                         }else{
                             mpStop()
@@ -500,7 +511,6 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                                 val time = musicRealm.where<MusicTable>().equalTo("musicPath",musicPath).findFirst()
                                 bgplayTime+= time?.playTime!!.toLong()
                                 playTime += bgplayTime
-
                                 val res = this.resources
                                 var soundId = res.getIdentifier(musicPath, "raw", this.packageName)
                                 mediaPlayer = MediaPlayer.create(this, soundId)
