@@ -9,7 +9,7 @@
     </style>
 
     <style name="CustomSwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">#ececec</item>
+        <item name="colorControlActivated">#FF14E4</item>
         <item name="android:colorForeground">#fff</item>
 
 
