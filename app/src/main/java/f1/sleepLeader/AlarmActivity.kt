@@ -110,6 +110,7 @@ class AlarmActivity : MediaPlayerActivity() {
         }
 
         AlarmMemory.setOnClickListener {
+
             startActivity<AlarmStopActivity>("activityFlag" to "4")
         }
     }

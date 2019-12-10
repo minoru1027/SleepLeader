@@ -1,21 +1,25 @@
 package f1.sleepLeader
 
 //import android.support.v7.app.AppCompatActivity
+import android.graphics.Color
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.kotlin.where
 import java.util.Calendar
 import kotlinx.android.synthetic.main.activity_music.*
 import org.jetbrains.anko.startActivity
+import org.w3c.dom.Text
 import java.lang.RuntimeException
 
 class MusicActivity : MediaPlayerActivity(){
 
     private lateinit var musicRealm: Realm
     private lateinit var musicAlarmRealm: Realm
+    private var positioned = 0
     private var name = ""
     private var musicFlag = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +42,12 @@ class MusicActivity : MediaPlayerActivity(){
             startActivity<MusicDownLoadActivity>()
         }
         musicListView.setOnItemClickListener{ parent, view, position, id ->
+            /*if(positioned != 0){
+                selectedNamed.setTextColor(Color.rgb(211,211,211))
+            }
+            val color = view.findViewById<TextView>(android.R.id.text1)
+            selectedNamed = color
+            color.setTextColor(Color.rgb(152,217,142))*/
             val musicListPosition = parent.getItemAtPosition(position) as MusicTable
             alarmFlag = true
             if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()&&name.equals(musicListPosition.musicName)){

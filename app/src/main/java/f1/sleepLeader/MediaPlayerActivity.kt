@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.storage.FirebaseStorage
 import java.io.IOException
-import java.lang.IllegalStateException
 import java.util.*
+import kotlin.IllegalStateException
 
 open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionListener{
 
@@ -76,6 +76,8 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
                 }.addOnFailureListener {}
             }catch (e:IllegalStateException){
 
+            }catch (e:IllegalStateException){
+
             }
     }
     fun alarm(){
@@ -87,6 +89,14 @@ open class MediaPlayerActivity: AppCompatActivity(),MediaPlayer.OnCompletionList
 
         }else{
             mediaAlarmPlayer.start()
+        }
+    }
+    fun dlStop(){
+        try {
+            mediaAlarmPlayer.reset()
+            mediaAlarmPlayer.stop()
+        }catch (e : IllegalStateException){
+            println("test")
         }
     }
     fun mpStart(context: Context,musicPath: String){

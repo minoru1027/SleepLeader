@@ -81,7 +81,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
         startService(Intent(this,DestroyingService::class.java))
 
         nextTimer.visibility = View.GONE
-
+        textView5.visibility = View.GONE
         val timeNow = calendarNow.get(Calendar.HOUR_OF_DAY)
 
         if(timeNow >=4 && timeNow <= 8){
@@ -146,7 +146,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                 timeCount++
             }else{
                 nextTimer.visibility = View.VISIBLE
-
+                textView5.visibility = View.VISIBLE
                 //TimeListを昇順に書き換え
                 for(i in 1..timeList.size-1 step 1){
                     for(j in i..timeList.size-1 step 1){
@@ -209,8 +209,13 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
             musicFlag = "false"
             snoozeFlag = "false"
-
-            val timer = calendar.get(Calendar.HOUR_OF_DAY).toString()+":"+calendar.get(Calendar.MINUTE).toString()
+            var minute = ""
+            if(calendar.get(Calendar.MINUTE) < 10){
+                minute = "0"+calendar.get(Calendar.MINUTE)
+            }else{
+                minute = calendar.get(Calendar.MINUTE).toString()
+            }
+            val timer = calendar.get(Calendar.HOUR_OF_DAY).toString()+":"+minute
 
             AlarmTime.setText(timer)
 
@@ -226,6 +231,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                 AlarmTime.text = timeList[timeCount]
                 timeCount++
             }else{
+                textView5.visibility = View.VISIBLE
                 nextTimer.visibility = View.VISIBLE
                 AlarmTime.text = timeList[timeCount]
                 timeCount++
@@ -301,6 +307,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                             startActivity<AlarmActivity>()
                         } else if (timeCount + 1 === timeList.size) {
                             nextTimer.visibility = View.GONE
+                            textView5.visibility = View.GONE
 
                             setTimer(timeList[timeCount]?.toDate())
 
@@ -317,6 +324,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
                         } else {
                             nextTimer.visibility = View.VISIBLE
+                            textView5.visibility = View.VISIBLE
                             setTimer(timeList[timeCount]?.toDate())
                             AlarmTime.text = timeList[timeCount]
                             timeCount++
