@@ -45,7 +45,6 @@
             android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.787"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/musicFlag" />
 
@@ -104,12 +103,12 @@
 
     <TextView
             android:id="@+id/textView2"
-            android:layout_width="79dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="196dp"
+            android:layout_width="126dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="149dp"
             android:layout_marginTop="13dp"
             android:gravity="center"
-            android:text="音楽固定"
+            android:text="睡眠BGM固定"
             android:textColor="#fffaf0"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
