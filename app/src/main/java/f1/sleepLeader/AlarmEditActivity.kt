@@ -72,7 +72,7 @@ class AlarmEditActivity : AppCompatActivity() {
         timePicker.setOnClickListener {
             val newFragment = TimePickerFragment()
             newFragment.show(supportFragmentManager, "Time Picker")
-
+            AlarmSetting.visibility = View.GONE
         }
 
 

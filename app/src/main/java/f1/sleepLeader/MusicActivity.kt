@@ -19,7 +19,6 @@ class MusicActivity : MediaPlayerActivity(){
 
     private lateinit var musicRealm: Realm
     private lateinit var musicAlarmRealm: Realm
-    private var positioned = 0
     private var name = ""
     private var musicFlag = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +41,6 @@ class MusicActivity : MediaPlayerActivity(){
             startActivity<MusicDownLoadActivity>()
         }
         musicListView.setOnItemClickListener{ parent, view, position, id ->
-            /*if(positioned != 0){
-                selectedNamed.setTextColor(Color.rgb(211,211,211))
-            }
-            val color = view.findViewById<TextView>(android.R.id.text1)
-            selectedNamed = color
-            color.setTextColor(Color.rgb(152,217,142))*/
             val musicListPosition = parent.getItemAtPosition(position) as MusicTable
             alarmFlag = true
             if(mediaPlayer.isPlaying()|| mediaAlarmPlayer.isPlaying()&&name.equals(musicListPosition.musicName)){
