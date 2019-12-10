@@ -64,10 +64,10 @@
 
     <TextView
             android:id="@+id/timePicker"
-            android:layout_width="294dp"
-            android:layout_height="68dp"
+            android:layout_width="350dp"
+            android:layout_height="95dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="120dp"
+            android:layout_marginTop="100dp"
             android:layout_marginEnd="10dp"
             android:gravity="center"
             android:text="起床時間を設定する"
@@ -82,8 +82,8 @@
             android:id="@+id/imageView"
             android:layout_width="43dp"
             android:layout_height="50dp"
-            android:layout_marginStart="276dp"
-            android:layout_marginBottom="86dp"
+            android:layout_marginStart="332dp"
+            android:layout_marginBottom="132dp"
             app:layout_constraintBottom_toTopOf="@+id/snoozeFlag"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@mipmap/touch" />
