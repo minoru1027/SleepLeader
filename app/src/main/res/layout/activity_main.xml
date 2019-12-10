@@ -30,7 +30,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+            android:id="@+id/AlarmMemory"
+            android:layout_width="272dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="64dp"
+            android:background="@drawable/radius"
+            android:text="前回のアラームをセットする"
+            android:textColor="#fffaf0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <Button
+            android:id="@+id/AlarmMinute"
+            android:layout_width="272dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="64dp"
+            android:background="@drawable/radius"
+            android:text="15分後にセットする"
+            android:textColor="#fffaf0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AlarmMemory" />
+
     <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="278dp"
             android:layout_height="83dp"
             android:layout_marginStart="32dp"

@@ -20,6 +20,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import io.realm.Realm
+import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_alarm_stop.*
 import org.jetbrains.anko.startActivity
@@ -36,9 +37,11 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
     private lateinit var countDown : AlarmStopActivity.CountDown
     private lateinit var realm : Realm
     private var musicRealm : Realm = Realm.getDefaultInstance()
+    private var memoryRealm : Realm = Realm.getDefaultInstance()
     private lateinit var snoozeFlag : String
     private lateinit var musicFlag : String
     private var pTime : Long = 0
+    private var setTime = ""
     private var activityFlag = ""
     private var musicPath = ""
     private var firebaseFlag = ""
@@ -95,7 +98,7 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
 
         //AlarmSetActivityか、AlarmListActivityのどっちの遷移かを判定
         if(activityFlag.equals("0")){
-            val setTime = intent.getStringExtra("setTime")
+            setTime = intent.getStringExtra("setTime")
             snoozeFlag = intent.getStringExtra("snoozeFlag")
             musicFlag = intent.getStringExtra("musicFlag")
             if(musicFlag.equals("true")) {
@@ -108,6 +111,26 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
             setTimer(time)
 
             AlarmTime.text = setTime
+
+            val memory = memoryRealm.where<AlarmMemoryTable>().findAll()
+
+            if(memory.size != 0){
+                memoryRealm.executeTransaction{
+                    memory.deleteAllFromRealm()
+                }
+            }
+
+            memoryRealm.executeTransaction{
+                var maxId = memoryRealm.where<AlarmMemoryTable>().max("AlarmMemoryId")
+                var nextId = (maxId?.toLong() ?: 0L) + 1
+                var memory = memoryRealm.createObject<AlarmMemoryTable>(nextId)
+
+                memory.timer = setTime
+                memory.snoozeFlag = snoozeFlag
+                memory.musicFlag  = musicFlag
+                memory.musicPath = musicPath
+                memory.firebaseFlag = firebaseFlag
+            }
 
         }else if(activityFlag.equals("1")){
             timerList = intent?.getSerializableExtra("timerList") as HashMap<Long, String>
@@ -155,6 +178,68 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                 musicPath = timeSet?.musicPath.toString()
                 firebaseFlag = timeSet?.firebaseFlag.toString()
             }
+            val memory = memoryRealm.where<AlarmMemoryTable>().findAll()
+
+            if(memory.size != 0){
+                memoryRealm.executeTransaction{
+                    memory.deleteAllFromRealm()
+                }
+            }
+
+            for(i in 1..timeList.size){
+                val setTime = realm.where<AlarmTable>().equalTo("timer",timeList[i-1]).findFirst()
+                memoryRealm.executeTransaction {
+                    var maxId = memoryRealm.where<AlarmMemoryTable>().max("AlarmMemoryId")
+                    var nextId = (maxId?.toLong() ?: 0L) + 1
+                    var memory = memoryRealm.createObject<AlarmMemoryTable>(nextId)
+                    memory.timer = setTime?.timer.toString()
+                    memory.snoozeFlag = setTime?.snoozeFlag.toString()
+                    memory.musicFlag = setTime?.musicFlag.toString()
+                    memory.musicPath = setTime?.musicPath.toString()
+                    memory.firebaseFlag = setTime?.firebaseFlag.toString()
+                }
+            }
+        }else if(activityFlag.equals("3")){
+            var calendar: Calendar = Calendar.getInstance()
+            calendar.set(Calendar.YEAR,year)
+            calendar.set(Calendar.MONTH,month)
+            calendar.set(Calendar.DATE,date)
+            calendar.add(Calendar.MINUTE,15)
+            calendar.set(Calendar.SECOND,0)
+
+            musicFlag = "false"
+            snoozeFlag = "false"
+
+            val timer = calendar.get(Calendar.HOUR_OF_DAY).toString()+":"+calendar.get(Calendar.MINUTE).toString()
+
+            AlarmTime.setText(timer)
+
+            setAlarmManager(calendar)
+        }else if(activityFlag.equals("4")){
+            val memoryList = memoryRealm.where<AlarmMemoryTable>().findAll()
+            for (id in 1..memoryList.size) {
+                val memoryId = memoryRealm.where<AlarmMemoryTable>().equalTo("AlarmMemoryId", id).findFirst()
+                timeList.add(memoryId?.timer.toString())
+            }
+
+            if(timeCount+1 === timeList.size){
+                AlarmTime.text = timeList[timeCount]
+                timeCount++
+            }else{
+                nextTimer.visibility = View.VISIBLE
+                AlarmTime.text = timeList[timeCount]
+                timeCount++
+                nextTimer.text = timeList[timeCount]
+            }
+            val timer = AlarmTime.text.toString()
+
+            setTimer(timer?.toDate())
+
+            val timeSet = realm.where<AlarmTable>().equalTo("timer",timer).findFirst()
+
+            snoozeFlag = timeSet?.snoozeFlag.toString()
+            musicFlag = timeSet?.musicFlag.toString()
+
         }
         if(musicFlag.equals("false")){
             musicPath = MusicRandom()
@@ -209,9 +294,9 @@ class AlarmStopActivity : MediaPlayerActivity(),SensorEventListener,Application.
                     if (snoozeFlag.equals("true")) {
                         onSetSnooze()
                         snoozeFlag = "false"
-                    } else if (snoozeFlag.equals("false") && activityFlag.equals("0")) {
+                    } else if (snoozeFlag.equals("false") && (activityFlag.equals("0") || activityFlag.equals("3"))) {
                         startActivity<AlarmActivity>()
-                    } else if (snoozeFlag.equals("false") && activityFlag.equals("1")) {
+                    } else if (snoozeFlag.equals("false") && (activityFlag.equals("1") || activityFlag.equals("4"))) {
                         if (timeCount + 1 > timeList.size) {
                             startActivity<AlarmActivity>()
                         } else if (timeCount + 1 === timeList.size) {
