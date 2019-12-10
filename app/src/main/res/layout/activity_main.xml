@@ -47,7 +47,7 @@
             android:id="@+id/AlarmMinute"
             android:layout_width="272dp"
             android:layout_height="53dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="48dp"
             android:background="@drawable/radius"
             android:text="15分後にセットする"
             android:textColor="#fffaf0"
