@@ -6,16 +6,18 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import kotlinx.android.synthetic.main.activity_alarm_set.*
 
 import java.util.*
 
 class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
     private lateinit var calendar:Calendar
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         // Initialize a Calendar instance
@@ -42,17 +44,21 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         // Do something with the returned time
         var tv : TextView = activity!!.findViewById<TextView>(R.id.timePicker)
+        var setting : Button = activity!!.findViewById(R.id.AlarmSetting)
         var hour = hourOfDay
         val zone = getAMPM(hourOfDay)
         println(zone)
         if(zone.equals("PM")){
             hour += 12
         }
+        setting.visibility = View.VISIBLE
         tv.text = "%1$02d:%2$02d".format(getHourAMPM(hour),minute)
 
     }
     override fun onCancel(dialog: DialogInterface?) {
         Toast.makeText(activity,"Picker Canceled.",Toast.LENGTH_SHORT).show()
+        var setting : Button = activity!!.findViewById(R.id.AlarmSetting)
+        setting.visibility = View.VISIBLE
         super.onCancel(dialog)
     }
 

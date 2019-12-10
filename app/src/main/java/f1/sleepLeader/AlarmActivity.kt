@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.kotlin.createObject
@@ -18,6 +19,7 @@ class AlarmActivity : MediaPlayerActivity() {
 
     private lateinit var musicRealm : Realm
     private lateinit var musicAlarmRealm : Realm
+    private var memoryRealm : Realm = Realm.getDefaultInstance()
     private val Id :Long = 1
     private val alarmId : Long = 1
 
@@ -110,8 +112,12 @@ class AlarmActivity : MediaPlayerActivity() {
         }
 
         AlarmMemory.setOnClickListener {
-
-            startActivity<AlarmStopActivity>("activityFlag" to "4")
+            val memoryList = memoryRealm.where<AlarmMemoryTable>().findAll()
+            if(memoryList.size == 0){
+                Toast.makeText(this, "前回のアラームの値が存在していません", Toast.LENGTH_LONG).show()
+            }else {
+                startActivity<AlarmStopActivity>("activityFlag" to "4")
+            }
         }
     }
 
