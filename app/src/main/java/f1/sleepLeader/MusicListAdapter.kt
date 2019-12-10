@@ -37,7 +37,6 @@ class MusicListAdapter (context : Context,MusicNameList: List<FireBaseData>) : A
         val musicList = getItem(position) as FireBaseData
         viewHolder.musicName.text = musicList.musicName
         viewHolder.musicPath = musicList.musicPath
-        viewHolder.musicTime = musicList.musicTime
         //Listの文字色
         viewHolder.musicName.setTextColor(Color.rgb(211,211,211))
         viewHolder.musicName.gravity= Gravity.CENTER

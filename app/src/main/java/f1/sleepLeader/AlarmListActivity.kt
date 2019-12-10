@@ -5,10 +5,13 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 //import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 //import android.support.v7.app.AppCompatViewInflater
 import androidx.appcompat.app.AppCompatActivity
@@ -56,9 +59,17 @@ class AlarmListActivity : AppCompatActivity() {
         listView.setOnItemClickListener { parent, view, position, id ->
             val timePosition = parent.getItemAtPosition(position) as timerData
             val alarmId = timePosition.alarmId.toLong()
+            val color = view.findViewById<TextView>(android.R.id.text1)
             timer = timePosition.alarmTime
-
-            selectedTimer(alarmId,timer)
+            if(alarmId != null){
+                if(timerList.get(alarmId)==timer){
+                    color.setTextColor(Color.rgb(255,250,240))
+                    timerList.remove(alarmId)
+                }else{
+                    color.setTextColor(Color.rgb(152,217,142))
+                    timerList.put(alarmId,timer)
+                }
+            }
 
         }
 
@@ -119,7 +130,7 @@ class AlarmListActivity : AppCompatActivity() {
         if(alarmId != null){
             if(timerList.get(alarmId)==timer){
                 Toast.makeText(this, "解除", Toast.LENGTH_LONG).show()
-                 timerList.remove(alarmId)
+                timerList.remove(alarmId)
             }else{
                 Toast.makeText(this, "登録", Toast.LENGTH_LONG).show()
                 timerList.put(alarmId,timer)

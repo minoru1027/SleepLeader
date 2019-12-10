@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
+import org.jetbrains.anko.startActivity
 
 class AlarmActivity : MediaPlayerActivity() {
 
@@ -102,6 +103,14 @@ class AlarmActivity : MediaPlayerActivity() {
         listButton.setOnClickListener{
             val intent = Intent(this,AlarmListActivity::class.java)
             startActivity(intent)
+        }
+
+        AlarmMinute.setOnClickListener{
+            startActivity<AlarmStopActivity>("activityFlag" to "3")
+        }
+
+        AlarmMemory.setOnClickListener {
+            startActivity<AlarmStopActivity>("activityFlag" to "4")
         }
     }
 
