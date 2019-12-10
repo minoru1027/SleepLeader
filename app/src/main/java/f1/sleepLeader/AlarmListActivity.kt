@@ -125,18 +125,6 @@ class AlarmListActivity : AppCompatActivity() {
         val alarmTimeList = List(alarmList.size){i ->timerData(idList[i],timeList[i])}
         listView.adapter = alarmListAdapter(this,alarmTimeList)
     }
-    private fun selectedTimer(alarmId : Long,timer : String) {
-
-        if(alarmId != null){
-            if(timerList.get(alarmId)==timer){
-                Toast.makeText(this, "解除", Toast.LENGTH_LONG).show()
-                timerList.remove(alarmId)
-            }else{
-                Toast.makeText(this, "登録", Toast.LENGTH_LONG).show()
-                timerList.put(alarmId,timer)
-            }
-        }
-    }
 
      private fun String.toDate(time : String = "HH:mm") : Date?{
          val sdTimer = try{

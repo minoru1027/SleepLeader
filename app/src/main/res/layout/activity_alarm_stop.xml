@@ -20,23 +20,53 @@
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_launcher_background" />
 
+    <TextClock
+            android:id="@+id/textClock"
+            android:layout_width="331dp"
+            android:layout_height="112dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="10dp"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="70sp"
+            android:timeZone="Asia/Tokyo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
             android:id="@+id/AlarmTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="52dp"
             android:textColor="#fffaf0"
-            android:textSize="70sp"
+            android:textSize="42sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.725"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textClock" />
+
+    <TextView
+            android:id="@+id/nextTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:textColor="#fffaf0"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.725"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/AlarmTime" />
 
     <Switch
             android:id="@+id/switch2"
             android:layout_width="wrap_content"
             android:layout_height="88dp"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="396dp"
+            android:layout_marginTop="350dp"
             android:layout_marginEnd="32dp"
             android:switchMinWidth="300dp"
             android:thumb="@drawable/switch_thumb"
@@ -44,18 +74,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.489"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/AlarmTime" />
+            app:layout_constraintTop_toBottomOf="@+id/textClock" />
 
     <TextView
-            android:id="@+id/nextTimer"
+            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:textSize="32sp"
-            android:textColor="#fffaf0"
+            android:layout_marginTop="66dp"
+            android:text="セットした時間"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.724"
+            app:layout_constraintHorizontal_bias="0.156"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/AlarmTime" />
+            app:layout_constraintTop_toBottomOf="@+id/textClock" />
+
+    <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="42dp"
+            android:text="2個目にセットした時間"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.156"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
